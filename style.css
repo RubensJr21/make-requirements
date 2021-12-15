@@ -1,0 +1,42 @@
+body {
+    margin: 0;
+	padding: 0;
+	border: 0;
+    width: 100vw;
+    height: 100vh;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto 1fr;
+
+    font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+
+#controle {
+    height: auto;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    display: flex;
+    justify-content: space-around;
+}
+
+.requisito_regra {
+    border-style: dashed;
+    border-width: 2px;
+    border-radius: 20px;
+    padding: 0px 10px 10px 15px;
+    margin-bottom: 10px;
+}
+.requisitos_regras {
+    overflow: auto;
+}
+
+.RF{
+    border-color: green;
+}
+.RNF{
+    border-color: orangered;
+}
+.RN{
+    border-color: indigo;
+}
