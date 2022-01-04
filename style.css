@@ -12,6 +12,8 @@ body {
     font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
+/* Barra de Controle */
+
 #controle {
     height: auto;
     grid-column-start: 1;
@@ -20,15 +22,20 @@ body {
     justify-content: space-around;
 }
 
+/* Requisitos e Regras */
+
+/* Containers para as boxes */
+.requisitos_regras {
+    overflow: auto;
+}
+
+/* Objeto de BOX as caixas de requisitos e regras */
 .requisito_regra {
     border-style: dashed;
     border-width: 2px;
     border-radius: 20px;
     padding: 0px 10px 10px 15px;
     margin-bottom: 10px;
-}
-.requisitos_regras {
-    overflow: auto;
 }
 
 .RF{
@@ -39,4 +46,30 @@ body {
 }
 .RN{
     border-color: indigo;
+}
+
+#divSpanDepenID{
+    font-size: small;
+    background-color: #6eda2c;
+    border-radius: 10%;
+    max-width: fit-content;
+    padding: 5px 5px;
+    margin: 5px
+}
+#divDepenID{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#divSpanConfliID{
+    font-size: small;
+    background-color: #da0001;
+    border-radius: 10%;
+    max-width: fit-content;
+    padding: 5px 5px;
+    margin: 5px
+}
+#divConfliID{
+    display: flex;
+    flex-wrap: wrap;
 }
