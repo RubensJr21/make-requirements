@@ -1,8 +1,6 @@
 var observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
         if (mutation.type === "attributes") {
-            // console.log("attributes changed")
-            // console.log(mutation)
             mutation.target.update()
         }
     });
@@ -232,18 +230,13 @@ class Box extends HTMLElement {
                 var node = document.getElementById(this.parentElement.id);
                 node.removeChild(this);
                 const tagNames = {
-                    "requisitosFuncionais": "r-f",
-                    "requisitosNaoFuncionais": "r-n-f",
-                    "regrasDeNegocio": "r-n"
+                    "RF": "r-f",
+                    "RNF": "r-n-f",
+                    "RN": "r-n"
                 }
-                const boxes = node.querySelectorAll(tagNames[node.id])
-                const IDs = {
-                    "requisitosFuncionais": "RF",
-                    "requisitosNaoFuncionais": "RNF",
-                    "regrasDeNegocio": "RN"
-                }
+                const boxes = node.querySelectorAll(tagNames[type])
                 boxes.forEach((item, id) => {
-                    item.id = `${IDs[node.id]}${id+1}`
+                    item.id = `${type}${id+1}`
                 })
             }
             return button
@@ -270,7 +263,6 @@ class Box extends HTMLElement {
             this.shadowRoot.getElementById("id").textContent = this.id
         }
         // console.log(this)
-        window.cc = this
         setID()
     }
 }
