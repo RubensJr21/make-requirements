@@ -75,14 +75,14 @@
                 <input type="text" name="conflitos" id="conflitosINPUT">
             </fieldset>
             <script>
-                function show({id}){
+                function removeChild({id}){
                     var node = document.getElementById(id);
                     if (node.parentNode) {
                         node.parentNode.removeChild(node);
                     }
                 }
             </script>
-            <button onclick="show(this.parentElement)">Remover</button>
+            <button onclick="removeChild(this)">Remover</button>
             </div>
         </div>
     </fieldset>

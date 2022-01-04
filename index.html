@@ -8,11 +8,27 @@
     <title>Make requirements</title>
 </head>
 
-<script>
+<script>    
     function addRF(){
-        RF2 = document.getElementById("RF1").cloneNode(true)
-        RF2.id = "RF2"
-        document.getElementById("requisitosFuncionais").appendChild(RF2)
+        const requisitosFuncionais = document.getElementById("requisitosFuncionais")
+        const countId = requisitosFuncionais.childElementCount
+        RF = document.createElement("r-f")
+        RF.setAttribute("id", `RF${countId}`);
+        requisitosFuncionais.appendChild(RF)
+    }
+    function addRNF(){
+        const requisitosNaoFuncionais = document.getElementById("requisitosNaoFuncionais")
+        const countId = requisitosNaoFuncionais.childElementCount
+        RNF = document.createElement("r-n-f")
+        RNF.setAttribute("id", `RNF${countId}`);
+        requisitosNaoFuncionais.appendChild(RNF)
+    }
+    function addRN(){
+        const regrasDeNegocio = document.getElementById("regrasDeNegocio")
+        const countId = regrasDeNegocio.childElementCount
+        RN = document.createElement("r-n")
+        RN.setAttribute("id", `RN${countId}`);
+        regrasDeNegocio.appendChild(RN)
     }
 </script>
 
@@ -21,21 +37,18 @@
     <fieldset id="controle">
         <legend>Controles</legend>
         <button onclick="addRF()">Adicionar RF</button>
-        <button>Adicionar RNF</button>
-        <button>Adicionar RN</button>
+        <button onclick="addRNF()">Adicionar RNF</button>
+        <button onclick="addRN()">Adicionar RN</button>
     </fieldset>
     
     <fieldset id="requisitosFuncionais" class="requisitos_regras">
         <legend>Requisitos Funcionais (RF)</legend>
-        <r-f></r-f>
     </fieldset>
-    <fieldset id="requisitosFuncionais" class="requisitos_regras">
+    <fieldset id="requisitosNaoFuncionais" class="requisitos_regras">
         <legend>Requisitos Não Funcionais (RF)</legend>
-        <r-n-f></r-n-f>
     </fieldset>
-    <fieldset id="requisitosFuncionais" class="requisitos_regras">
+    <fieldset id="regrasDeNegocio" class="requisitos_regras">
         <legend>Regras de Negócio (RN)</legend>
-        <r-n></r-n>
     </fieldset>
     <script src="components.js"></script>
 </body>

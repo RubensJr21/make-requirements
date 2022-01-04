@@ -1,6 +1,19 @@
+var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.type === "attributes") {
+            // console.log("attributes changed")
+            // console.log(mutation)
+            mutation.target.update()
+        }
+    });
+  });
+
 class Box extends HTMLElement {
     constructor(){
         super()
+        observer.observe(this, {
+            attributes: true, //configure it to listen to attribute changes
+        })
     }
 
     createStyle(type){
@@ -62,6 +75,7 @@ class Box extends HTMLElement {
         const createID = (ID) => {
             var h3 = document.createElement("h3")
             h3.textContent = ID
+            h3.id = "id"
             return h3;    
         }
         
@@ -209,7 +223,34 @@ class Box extends HTMLElement {
         
             return fieldset
         }
-    
+
+        const createRemoveButton = () => {
+            var button = document.createElement("button")
+            button.innerText = "Remover"
+            button.onclick = () => {
+                console.log(this.parentElement)
+                var node = document.getElementById(this.parentElement.id);
+                node.removeChild(this);
+                const tagNames = {
+                    "requisitosFuncionais": "r-f",
+                    "requisitosNaoFuncionais": "r-n-f",
+                    "regrasDeNegocio": "r-n"
+                }
+                const boxes = node.querySelectorAll(tagNames[node.id])
+                const IDs = {
+                    "requisitosFuncionais": "RF",
+                    "requisitosNaoFuncionais": "RNF",
+                    "regrasDeNegocio": "RN"
+                }
+                boxes.forEach((item, id) => {
+                    item.id = `${IDs[node.id]}${id+1}`
+                })
+                window.boxes = boxes
+                // console.log(boxes)
+            }
+            return button
+        }
+        
         var div = createRF(`${type}1`)
         div.classList.add("requisito_regra")
         div.classList.add(type)
@@ -222,7 +263,17 @@ class Box extends HTMLElement {
         div.appendChild(createPriority())
         div.appendChild(createDependencies())
         div.appendChild(createConflicts())
+        div.appendChild(createRemoveButton())
         return div
+    }
+
+    update(){
+        const setID = () => {
+            this.shadowRoot.getElementById("id").textContent = this.id
+        }
+        console.log(this)
+        window.cc = this
+        setID()
     }
 }
 
