@@ -177,8 +177,9 @@ class RequisitoFuncional extends HTMLElement {
         this.build()
     }
     build(){
+        const shadow = this.attachShadow({mode: "open"})
         var div = Fill("RF")
-        this.appendChild(div)
+        shadow.appendChild(div)
     }
 }
 class RequisitoNaoFuncional extends HTMLElement {
@@ -187,8 +188,9 @@ class RequisitoNaoFuncional extends HTMLElement {
         this.build()
     }
     build(){
+        const shadow = this.attachShadow({mode: "open"})
         var div = Fill("RNF")
-        this.appendChild(div)
+        shadow.appendChild(div)
     }
 }
 class RegraDeNegocio extends HTMLElement {
@@ -198,8 +200,9 @@ class RegraDeNegocio extends HTMLElement {
     }
 
     build(){
+        const shadow = this.attachShadow({mode: "open"})
         var div = Fill("RN")
-        this.appendChild(div)
+        shadow.appendChild(div)
     }
 }
 
