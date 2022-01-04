@@ -228,7 +228,7 @@ class Box extends HTMLElement {
             var button = document.createElement("button")
             button.innerText = "Remover"
             button.onclick = () => {
-                console.log(this.parentElement)
+                // console.log(this.parentElement)
                 var node = document.getElementById(this.parentElement.id);
                 node.removeChild(this);
                 const tagNames = {
@@ -245,8 +245,6 @@ class Box extends HTMLElement {
                 boxes.forEach((item, id) => {
                     item.id = `${IDs[node.id]}${id+1}`
                 })
-                window.boxes = boxes
-                // console.log(boxes)
             }
             return button
         }
@@ -271,7 +269,7 @@ class Box extends HTMLElement {
         const setID = () => {
             this.shadowRoot.getElementById("id").textContent = this.id
         }
-        console.log(this)
+        // console.log(this)
         window.cc = this
         setID()
     }
