@@ -1,3 +1,52 @@
+const createStyle = (type) => {
+    var style = document.createElement("style")
+    const RF =  ".RF{\nborder-color: green;\n}"
+    const RNF = ".RNF{\nborder-color: orangered;\n}"
+    const RN =  ".RN{\nborder-color: indigo;\n}"
+    const types = {
+        RF:  "\n.RF{\nborder-color: green;\n}\n",
+        RNF: "\n.RNF{\nborder-color: orangered;\n}\n",
+        RN:  "\n.RN{\nborder-color: indigo;\n}\n",
+    }
+    style.textContent = `
+    /* Objeto de BOX as caixas de requisitos e regras */
+.requisito_regra {
+border-style: dashed;
+border-width: 2px;
+border-radius: 20px;
+padding: 0px 10px 10px 15px;
+margin-bottom: 10px;
+}
+${types[type] || ""}
+#divSpanDepenID{
+font-size: small;
+background-color: #6eda2c;
+border-radius: 10%;
+max-width: fit-content;
+padding: 5px 5px;
+margin: 5px
+}
+#divDepenID{
+display: flex;
+flex-wrap: wrap;
+}
+
+#divSpanConfliID{
+font-size: small;
+background-color: #da0001;
+border-radius: 10%;
+max-width: fit-content;
+padding: 5px 5px;
+margin: 5px
+}
+#divConfliID{
+display: flex;
+flex-wrap: wrap;
+}
+    `
+    return style
+}
+
 function Fill(type){
     const createRF = (id) => {
         var div = document.createElement("div")
@@ -179,6 +228,7 @@ class RequisitoFuncional extends HTMLElement {
     build(){
         const shadow = this.attachShadow({mode: "open"})
         var div = Fill("RF")
+        shadow.appendChild(createStyle("RF"))
         shadow.appendChild(div)
     }
 }
@@ -190,6 +240,7 @@ class RequisitoNaoFuncional extends HTMLElement {
     build(){
         const shadow = this.attachShadow({mode: "open"})
         var div = Fill("RNF")
+        shadow.appendChild(createStyle("RNF"))
         shadow.appendChild(div)
     }
 }
@@ -202,6 +253,7 @@ class RegraDeNegocio extends HTMLElement {
     build(){
         const shadow = this.attachShadow({mode: "open"})
         var div = Fill("RN")
+        shadow.appendChild(createStyle("RN"))
         shadow.appendChild(div)
     }
 }
