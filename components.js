@@ -173,42 +173,53 @@ class Box extends HTMLElement {
             return div
         }
         
-        const createDependencies = () => {
+        const createDependencie = (_) => {
+            console.log("Criando dependência do: ", _)
+            var div = document.createElement("div")
+            div.id = "divSpanDepenID"
+            var span = document.createElement("span")
+            span.textContent = "{ID 0}"
+            div.appendChild(span)
+            return div
+        }
+        const createDependenciesBox = () => {
             var fieldset = document.createElement("fieldset")
             var legend = document.createElement("legend")
             legend.innerText = "Dependências:"
             var div = document.createElement("div")
+            div.classList.add("test")
             div.id = "divDepenID"
-            var divIN = document.createElement("div")
-            divIN.id = "divSpanDepenID"
-            var span = document.createElement("span")
-            span.textContent = "{ID 0}"
-            divIN.appendChild(span)
-            div.appendChild(divIN)
+            // div.appendChild(createDependencie())
         
             var input = document.createElement("input")
             input.type = "text"
             input.name = "dependencia"
             input.id = "dependenciaINPUT"
-        
+
             fieldset.appendChild(legend)
             fieldset.appendChild(div)
             fieldset.appendChild(input)
             return fieldset
         }
         
-        const createConflicts = () => {
+        const createConflict = (_) => {
+            console.log("Criando conflito com: ", _)
+            var div = document.createElement("div")
+            div.id = "divSpanConfliID"
+            var span = document.createElement("span")
+            span.textContent = "{ID 0}"
+            div.appendChild(span)
+            return div
+        }
+
+        const createConflictsBox = () => {
             var fieldset = document.createElement("fieldset")
             var legend = document.createElement("legend")
             legend.innerText = "Dependências:"
             var div = document.createElement("div")
+            div.classList.add("test")
             div.id = "divConfliID"
-            var divIN = document.createElement("div")
-            divIN.id = "divSpanConfliID"
-            var span = document.createElement("span")
-            span.textContent = "{ID 0}"
-            divIN.appendChild(span)
-            div.appendChild(divIN)
+            // div.appendChild(createConflict())
         
             var input = document.createElement("input")
             input.type = "text"
@@ -252,15 +263,15 @@ class Box extends HTMLElement {
         div.appendChild(createResponsible())
         div.appendChild(createInterested())
         div.appendChild(createPriority())
-        div.appendChild(createDependencies())
-        div.appendChild(createConflicts())
+        div.appendChild(createDependenciesBox())
+        div.appendChild(createConflictsBox())
         div.appendChild(createRemoveButton())
         return div
     }
 
     update(){
         const setID = () => {
-            this.shadowRoot.getElementById("id").textContent = this.id
+            this.shadowRoot.getElementById("id").textContent = this.idd
         }
         // console.log(this)
         setID()
