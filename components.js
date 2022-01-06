@@ -130,15 +130,24 @@ class Box extends HTMLElement {
             },
             
             createDependencie: (dependencie) => {
-                console.log("Criando dependência do: ", dependencie)
+                // console.log("Criando dependência do: ", dependencie)
                 var div = document.createElement("div")
                 div.id = "divSpanDepenID"
 
                 var span = document.createElement("span")
                 span.textContent = dependencie
+                span.id = dependencie
 
                 var button = document.createElement("button")
                 button.textContent = "X"
+                button.onclick = () => {
+                    this.dependencies.forEach((element, index, array) => {
+                        element.remDependents(this)
+                    })
+                    const dependencie = button.parentElement
+                    const divDependencies = dependencie.parentElement
+                    divDependencies.removeChild(dependencie)
+                }
                 
                 div.appendChild(span)
                 div.appendChild(button)
@@ -149,9 +158,7 @@ class Box extends HTMLElement {
                 var legend = document.createElement("legend")
                 legend.innerText = "Dependências:"
                 var div = document.createElement("div")
-                div.classList.add("test")
                 div.id = "divDepenID"
-                // div.appendChild(createDependencie())
             
                 var input = document.createElement("input")
                 input.type = "text"
@@ -166,11 +173,7 @@ class Box extends HTMLElement {
                         if(element && !this.dependencies.includes(element)) {
                             this.addDependencies(element)
                             this.updateDependencies()
-                            // const div = this.shadowRoot.getElementById("divDepenID")
-                            // div.appendChild(this.functions.createDependencie(e.target.value))
-                            console.log(this.dependencies)
                             element.addDependent(this)
-                            console.log(element.dependents)
                         }
                     }
                 }
@@ -191,6 +194,14 @@ class Box extends HTMLElement {
 
                 var button = document.createElement("button")
                 button.textContent = "X"
+                button.onclick = () => {
+                    this.conflicts.forEach((element, index, array) => {
+                        element.remConflicting(this)
+                    })
+                    const conflict = button.parentElement
+                    const divConflicts = conflict.parentElement
+                    divConflicts.removeChild(conflict)
+                }
 
                 div.appendChild(span)
                 div.appendChild(button)
@@ -202,9 +213,7 @@ class Box extends HTMLElement {
                 var legend = document.createElement("legend")
                 legend.innerText = "Conflitos:"
                 var div = document.createElement("div")
-                div.classList.add("test")
                 div.id = "divConfliID"
-                // div.appendChild(createConflict())
             
                 var input = document.createElement("input")
                 input.type = "text"
@@ -221,7 +230,7 @@ class Box extends HTMLElement {
                             const div = this.shadowRoot.getElementById("divConfliID")
                             div.appendChild(this.functions.createConflict(e.target.value))
                             console.log(this.conflicts)
-                            element.addDependent(this)
+                            element.addConflicting(this)
                             console.log(element.conflicting)
                         }
                     }
@@ -263,10 +272,11 @@ class Box extends HTMLElement {
     }
 
     addDependencies(element){
+        console.log(`${this.id}:`, this, "depende de", element)
         this.dependencies.push(element)
     }
     remDependencies(element){
-        console.log("removendo dependências", element)
+        console.log(`${this.id}:`, this, "não depende mais de", element)
         const d = this.dependencies
         this.dependencies = d.filter((item, index, array) => {
             return item != element
@@ -274,24 +284,36 @@ class Box extends HTMLElement {
         this.updateDependencies()
     }
     updateDependencies(){
-        console.log("Atualizando dependências", this)
-        console.log(this.dependencies)
+        console.log(`${this.id}:`, "Atualizando dependências do", this)
+        console.log(`${this.id}:`, "dependencies:", this.dependencies)
         const div = this.shadowRoot.getElementById("divDepenID")
         div.innerHTML = ""
         this.dependencies.forEach((element, index, array) => {
             div.appendChild(this.functions.createDependencie(element.id))
-            console.log(element.id)
+            // console.log(element.id)
         })
     }
     addDependent(element){
+        console.log(`${this.id}:`, "Adicionando", element, "como dependente")
         this.dependents.push(element)
+        console.log(`${this.id}:`, "dependents", this.dependents)
     }
-    
+    remDependents(element){
+        console.log(`${this.id}:`, "Removendo", element, "como dependente")
+        const d = this.dependents
+        this.dependents = d.filter((item, index, array) => {
+            return item != element
+        })
+        console.log(`${this.id}:`, "dependents", this.dependents)
+    }
+
+
     addConflicts(element){
+        console.log(`${this.id}:`, this, "conflita com", element)
         this.conflicts.push(element)
     }
     remConflicts(element){
-        console.log("removendo conflitos", element)
+        console.log(`${this.id}:`, this, "não conflita mais com", element)
         const c = this.conflicts
         this.conflicts = c.filter((item, index, array) => {
             return item != element
@@ -299,11 +321,27 @@ class Box extends HTMLElement {
         this.updateConflicts()
     }
     updateConflicts(){
-        console.log("Atualizando conflitos")
-        console.log(this.conflicts)
+        console.log(`${this.id}:`, "Atualizando conflitos do:", this)
+        console.log(`${this.id}:`, "conflicts:", this.conflicts)
+        const div = this.shadowRoot.getElementById("divConfliID")
+        div.innerHTML = ""
+        this.conflicts.forEach((element, index, array) => {
+            div.appendChild(this.functions.createConflict(element.id))
+            // console.log(element.id)
+        })
     }
-    addConflicting(){
+    addConflicting(element){
+        console.log(`${this.id}:`, "Adicionando", element, "como conflitante")
         this.conflicting.push(element)
+        console.log(`${this.id}:`, "conflicting", this.conflicting)
+    }
+    remConflicting(element){
+        console.log(`${this.id}:`, "Removendo", element, "como conflitante")
+        const c = this.conflicting
+        this.conflicting = c.filter((item, index, array) => {
+            return item != element
+        })
+        console.log(`${this.id}:`, "conflicting", this.conflicting)
     }
 
     createStyle(type){
@@ -368,7 +406,7 @@ ${types[type] || ""}
     }
 
     fill(type){
-        var div = this.functions.createRF(`${type}1`)
+        var div = this.functions.createRF(`${type}`)
         div.classList.add("requisito_regra")
         div.classList.add(type)
         div.appendChild(this.functions.createID("{ID}"))
@@ -387,6 +425,7 @@ ${types[type] || ""}
     update(){
         const setID = () => {
             this.shadowRoot.getElementById("id").textContent = this.id
+            this.shadowRoot.querySelector("div").id = this.id
         }
         // console.log(this)
         setID()
