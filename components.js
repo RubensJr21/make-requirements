@@ -12,6 +12,8 @@ class Box extends HTMLElement {
         observer.observe(this, {
             attributes: true, //configure it to listen to attribute changes
         })
+        this.dependencies = []
+        this.conflicts = []
     }
 
     createStyle(type){
@@ -173,12 +175,12 @@ class Box extends HTMLElement {
             return div
         }
         
-        const createDependencie = (_) => {
-            console.log("Criando dependência do: ", _)
+        const createDependencie = (dependencie) => {
+            console.log("Criando dependência do: ", dependencie)
             var div = document.createElement("div")
             div.id = "divSpanDepenID"
             var span = document.createElement("span")
-            span.textContent = "{ID 0}"
+            span.textContent = dependencie
             div.appendChild(span)
             return div
         }
@@ -196,10 +198,16 @@ class Box extends HTMLElement {
             input.name = "dependencia"
             input.id = "dependenciaINPUT"
             input.onkeydown = (e) => {
-                if(e.keyCode == 13) {
+                // Verifica se tecla pressionada foi enter
+                // && Se o é uma auto-referência de dependência
+                if(e.keyCode == 13 && e.target.value != this.id) {
                     // this == r-f OU r-n-f OU r-n
-                    const div = this.shadowRoot.getElementById("divDepenID")
-                    div.appendChild(createDependencie("RF1"))
+                    const element = document.getElementById(e.target.value)
+                    if(element && !this.dependencies.includes(element)) {
+                        this.dependencies.push(element)
+                        const div = this.shadowRoot.getElementById("divDepenID")
+                        div.appendChild(createDependencie(e.target.value))
+                    }
                 }
             }
 
@@ -209,12 +217,12 @@ class Box extends HTMLElement {
             return fieldset
         }
         
-        const createConflict = (_) => {
-            console.log("Criando conflito com: ", _)
+        const createConflict = (conflict) => {
+            console.log("Criando conflito com: ", conflict)
             var div = document.createElement("div")
             div.id = "divSpanConfliID"
             var span = document.createElement("span")
-            span.textContent = "{ID 0}"
+            span.textContent = conflict
             div.appendChild(span)
             return div
         }
@@ -222,7 +230,7 @@ class Box extends HTMLElement {
         const createConflictsBox = () => {
             var fieldset = document.createElement("fieldset")
             var legend = document.createElement("legend")
-            legend.innerText = "Dependências:"
+            legend.innerText = "Conflitos:"
             var div = document.createElement("div")
             div.classList.add("test")
             div.id = "divConfliID"
@@ -233,10 +241,16 @@ class Box extends HTMLElement {
             input.name = "conflitos"
             input.id = "conflitosINPUT"
             input.onkeydown = (e) => {
-                if(e.keyCode == 13) {
+                // Verifica se tecla pressionada foi enter
+                // && Se o é uma auto-referência de conflito
+                if(e.keyCode == 13 && e.target.value != this.id) {
                     // this == r-f OU r-n-f OU r-n
-                    const div = this.shadowRoot.getElementById("divConfliID")
-                    div.appendChild(createConflict("RF1"))
+                    const element = document.getElementById(e.target.value)
+                    if(element && !this.conflicts.includes(element)){
+                        this.conflicts.push(element)
+                        const div = this.shadowRoot.getElementById("divConfliID")
+                        div.appendChild(createConflict(e.target.value))
+                    }
                 }
             }
         
@@ -285,7 +299,7 @@ class Box extends HTMLElement {
 
     update(){
         const setID = () => {
-            this.shadowRoot.getElementById("id").textContent = this.idd
+            this.shadowRoot.getElementById("id").textContent = this.id
         }
         // console.log(this)
         setID()
