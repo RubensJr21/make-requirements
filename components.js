@@ -195,6 +195,13 @@ class Box extends HTMLElement {
             input.type = "text"
             input.name = "dependencia"
             input.id = "dependenciaINPUT"
+            input.onkeydown = (e) => {
+                if(e.keyCode == 13) {
+                    // this == r-f OU r-n-f OU r-n
+                    const div = this.shadowRoot.getElementById("divDepenID")
+                    div.appendChild(createDependencie("RF1"))
+                }
+            }
 
             fieldset.appendChild(legend)
             fieldset.appendChild(div)
@@ -225,6 +232,13 @@ class Box extends HTMLElement {
             input.type = "text"
             input.name = "conflitos"
             input.id = "conflitosINPUT"
+            input.onkeydown = (e) => {
+                if(e.keyCode == 13) {
+                    // this == r-f OU r-n-f OU r-n
+                    const div = this.shadowRoot.getElementById("divConfliID")
+                    div.appendChild(createConflict("RF1"))
+                }
+            }
         
             fieldset.appendChild(legend)
             fieldset.appendChild(div)
