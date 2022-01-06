@@ -133,9 +133,15 @@ class Box extends HTMLElement {
                 console.log("Criando dependência do: ", dependencie)
                 var div = document.createElement("div")
                 div.id = "divSpanDepenID"
+
                 var span = document.createElement("span")
                 span.textContent = dependencie
+
+                var button = document.createElement("button")
+                button.textContent = "X"
+                
                 div.appendChild(span)
+                div.appendChild(button)
                 return div
             },
             createDependenciesBox: () => {
@@ -179,9 +185,15 @@ class Box extends HTMLElement {
                 console.log("Criando conflito com: ", conflict)
                 var div = document.createElement("div")
                 div.id = "divSpanConfliID"
+
                 var span = document.createElement("span")
                 span.textContent = conflict
+
+                var button = document.createElement("button")
+                button.textContent = "X"
+
                 div.appendChild(span)
+                div.appendChild(button)
                 return div
             },
     
@@ -275,7 +287,7 @@ class Box extends HTMLElement {
         this.dependents.push(element)
     }
     
-    addConflicts(){
+    addConflicts(element){
         this.conflicts.push(element)
     }
     remConflicts(element){
@@ -305,40 +317,52 @@ class Box extends HTMLElement {
             RN:  "\n.RN{\nborder-color: indigo;\n}\n",
         }
         style.textContent = `
-        /* Objeto de BOX as caixas de requisitos e regras */
-    .requisito_regra {
+/* Objeto de BOX as caixas de requisitos e regras */
+.requisito_regra {
     border-style: dashed;
     border-width: 2px;
     border-radius: 20px;
     padding: 0px 10px 10px 15px;
     margin-bottom: 10px;
-    }
-    ${types[type] || ""}
-    #divSpanDepenID{
+}
+${types[type] || ""}
+#divSpanDepenID,
+#divSpanConfliID{
     font-size: small;
+    border-radius: 7%;
+    max-width: fit-content;
+    padding: 5px 5px;
+    margin: 5px
+}
+#divSpanDepenID {
     background-color: #6eda2c;
-    border-radius: 10%;
-    max-width: fit-content;
-    padding: 5px 5px;
-    margin: 5px
-    }
-    #divDepenID{
-    display: flex;
-    flex-wrap: wrap;
-    }
-    
-    #divSpanConfliID{
-    font-size: small;
+}
+#divSpanConfliID{
     background-color: #da0001;
-    border-radius: 10%;
-    max-width: fit-content;
-    padding: 5px 5px;
-    margin: 5px
-    }
-    #divConfliID{
+}
+#divSpanDepenID > button, 
+#divSpanConfliID > button{
+    background-color: transparent;
+    border: none !important;
+    cursor: pointer;
+    border-radius: 25%;
+    margin-left: 5px
+}
+#divSpanDepenID > button:hover {
+    background-color: white;
+}
+#divSpanConfliID > button:hover{
+    background-color: white;
+}
+#divDepenID{
     display: flex;
     flex-wrap: wrap;
-    }
+}
+
+#divConfliID{
+    display: flex;
+    flex-wrap: wrap;
+}
         `
         return style
     }
