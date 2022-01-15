@@ -12,21 +12,21 @@
     function addRF(){
         const requisitosFuncionais = document.getElementById("requisitosFuncionais")
         const countId = requisitosFuncionais.childElementCount
-        RF = document.createElement("r-f")
+        RF = document.createElement("mr-rf")
         RF.setAttribute("id", `RF${countId}`);
         requisitosFuncionais.appendChild(RF)
     }
     function addRNF(){
         const requisitosNaoFuncionais = document.getElementById("requisitosNaoFuncionais")
         const countId = requisitosNaoFuncionais.childElementCount
-        RNF = document.createElement("r-n-f")
+        RNF = document.createElement("mr-rnf")
         RNF.setAttribute("id", `RNF${countId}`);
         requisitosNaoFuncionais.appendChild(RNF)
     }
     function addRN(){
         const regrasDeNegocio = document.getElementById("regrasDeNegocio")
         const countId = regrasDeNegocio.childElementCount
-        RN = document.createElement("r-n")
+        RN = document.createElement("mr-rn")
         RN.setAttribute("id", `RN${countId}`);
         regrasDeNegocio.appendChild(RN)
     }
@@ -45,7 +45,7 @@
         <legend>Requisitos Funcionais (RF)</legend>
     </fieldset>
     <fieldset id="requisitosNaoFuncionais" class="requisitos_regras">
-        <legend>Requisitos Não Funcionais (RF)</legend>
+        <legend>Requisitos Não Funcionais (RNF)</legend>
     </fieldset>
     <fieldset id="regrasDeNegocio" class="requisitos_regras">
         <legend>Regras de Negócio (RN)</legend>

@@ -130,7 +130,6 @@ class Box extends HTMLElement {
             },
             
             createDependencie: (dependencie) => {
-                // console.log("Criando dependência do: ", dependencie)
                 var div = document.createElement("div")
                 div.id = "divSpanDepenID"
 
@@ -168,7 +167,7 @@ class Box extends HTMLElement {
                     // Verifica se tecla pressionada foi enter
                     // && Se o é uma auto-referência de dependência
                     if(e.keyCode == 13 && e.target.value != this.id) {
-                        // this == r-f OU r-n-f OU r-n
+                        // this == mr-rf OU mr-rnf OU mr-rn
                         const element = document.getElementById(e.target.value)
                         if(element && !this.dependencies.includes(element)) {
                             this.addDependencies(element)
@@ -185,7 +184,6 @@ class Box extends HTMLElement {
             },
             
             createConflict: (conflict) => {
-                console.log("Criando conflito com: ", conflict)
                 var div = document.createElement("div")
                 div.id = "divSpanConfliID"
 
@@ -223,15 +221,13 @@ class Box extends HTMLElement {
                     // Verifica se tecla pressionada foi enter
                     // && Se o é uma auto-referência de conflito
                     if(e.keyCode == 13 && e.target.value != this.id) {
-                        // this == r-f OU r-n-f OU r-n
+                        // this == mr-rf OU mr-rnf OU mr-rn
                         const element = document.getElementById(e.target.value)
                         if(element && !this.conflicts.includes(element)){
                             this.addConflicts(element)
                             const div = this.shadowRoot.getElementById("divConfliID")
                             div.appendChild(this.functions.createConflict(e.target.value))
-                            console.log(this.conflicts)
                             element.addConflicting(this)
-                            console.log(element.conflicting)
                         }
                     }
                 }
@@ -251,9 +247,9 @@ class Box extends HTMLElement {
                     var node = document.getElementById(this.parentElement.id);
                     node.removeChild(this);
                     const tagNames = {
-                        "RF": "r-f",
-                        "RNF": "r-n-f",
-                        "RN": "r-n"
+                        "RF": "mr-rf",
+                        "RNF": "mr-rnf",
+                        "RN": "mr-rn"
                     }
                     this.dependents.forEach((element,index, array) => {
                         element.remDependencies(this)
@@ -290,7 +286,6 @@ class Box extends HTMLElement {
         div.innerHTML = ""
         this.dependencies.forEach((element, index, array) => {
             div.appendChild(this.functions.createDependencie(element.id))
-            // console.log(element.id)
         })
     }
     addDependent(element){
@@ -372,25 +367,26 @@ ${types[type] || ""}
     padding: 5px 5px;
     margin: 5px
 }
-#divSpanDepenID {
+#divSpanDepenID,
+#divSpanDepenID > button{
     background-color: #6eda2c;
 }
-#divSpanConfliID{
+#divSpanConfliID,
+#divSpanConfliID > button{
     background-color: #da0001;
 }
 #divSpanDepenID > button, 
 #divSpanConfliID > button{
-    background-color: transparent;
+    /* background-color: transparent; */
     border: none !important;
     cursor: pointer;
     border-radius: 25%;
     margin-left: 5px
 }
-#divSpanDepenID > button:hover {
-    background-color: white;
-}
+#divSpanDepenID > button:hover,
 #divSpanConfliID > button:hover{
-    background-color: white;
+    /* Serve para escurecer cor aplicada */
+    filter: brightness(75%);
 }
 #divDepenID{
     display: flex;
@@ -470,6 +466,6 @@ class RegraDeNegocio extends Box {
     }
 }
 
-customElements.define("r-f", RequisitoFuncional)
-customElements.define("r-n-f", RequisitoNaoFuncional)
-customElements.define("r-n", RegraDeNegocio)
+customElements.define("mr-rf", RequisitoFuncional)
+customElements.define("mr-rnf", RequisitoNaoFuncional)
+customElements.define("mr-rn", RegraDeNegocio)
