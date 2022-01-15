@@ -12,6 +12,57 @@ body {
     font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
+#control-general{
+    position: absolute;
+    padding: 2.5px;
+    right: 0;
+}
+
+#gear,
+#export {
+    cursor: pointer;
+}
+
+#gear {
+    --color-lightUp: #1c1c1f;
+}
+
+#export {
+    --color-lightUp: #6eda2c;
+}
+
+#gear:hover,
+#export:hover {
+    animation-name: lightUpIcon;
+    animation-duration: .25s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease;
+    animation-delay: 0;
+}
+
+@keyframes lightUpIcon {
+    /* from {
+        color: black;
+        filter: drop-shadow(0 0 0 black)
+    }
+    to {
+        color: var(--color-lightUp);
+        filter: drop-shadow(0 0 30px var(--color-lightUp))
+    } */
+    0% {
+        color: black;
+        filter: drop-shadow(0 0 0 black)
+    }
+    50% {
+        color: black;
+        filter: drop-shadow(0 0 3px black)
+    }
+    100% {
+        color: var(--color-lightUp);
+        filter: drop-shadow(0 0 6px var(--color-lightUp))
+    }
+}
+
 /* Barra de Controle */
 
 #controle {
@@ -49,28 +100,23 @@ body {
     border-color: indigo;
 }
 
-#divSpanDepenID{
+#divSpanDepenID,
+#divSpanConfliID {
     font-size: small;
-    background-color: #6eda2c;
     border-radius: 10%;
     max-width: fit-content;
     padding: 5px 5px;
     margin: 5px
 }
-#divDepenID{
-    display: flex;
-    flex-wrap: wrap;
+#divSpanDepenID{
+    background-color: #6eda2c;
+}
+#divSpanConfliID{
+    background-color: #da0001;
 }
 
-#divSpanConfliID{
-    font-size: small;
-    background-color: #da0001;
-    border-radius: 10%;
-    max-width: fit-content;
-    padding: 5px 5px;
-    margin: 5px
-}
-#divConfliID{
+#divDepenID,
+#divConfliID {
     display: flex;
     flex-wrap: wrap;
 }
