@@ -260,6 +260,16 @@ class Box extends HTMLElement {
                     const boxes = node.querySelectorAll(tagNames[type])
                     boxes.forEach((item, id) => {
                         item.id = `${type}${id+1}`
+                        // Atualiza todas as dependências
+                        item.dependents.forEach((item, index, array) => {
+                            item.updateDependencies()
+                            item.updateConflicts()
+                        })
+                        // Atualiza todos os conflitos
+                        item.conflicts.forEach((item, index, array) => {
+                            item.updateDependencies()
+                            item.updateConflicts()
+                        })
                     })
                 }
                 return button
