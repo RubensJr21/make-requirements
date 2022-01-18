@@ -14,7 +14,7 @@
                 "requisitosFuncionais"
             );
             const countId = requisitosFuncionais.childElementCount;
-            RF = document.createElement("mr-rf");
+            const RF = document.createElement("mr-rf");
             RF.setAttribute("id", `RF${countId}`);
             requisitosFuncionais.appendChild(RF);
         }
@@ -23,14 +23,14 @@
                 "requisitosNaoFuncionais"
             );
             const countId = requisitosNaoFuncionais.childElementCount;
-            RNF = document.createElement("mr-rnf");
+            const RNF = document.createElement("mr-rnf");
             RNF.setAttribute("id", `RNF${countId}`);
             requisitosNaoFuncionais.appendChild(RNF);
         }
         function addRN() {
             const regrasDeNegocio = document.getElementById("regrasDeNegocio");
             const countId = regrasDeNegocio.childElementCount;
-            RN = document.createElement("mr-rn");
+            const RN = document.createElement("mr-rn");
             RN.setAttribute("id", `RN${countId}`);
             regrasDeNegocio.appendChild(RN);
         }
@@ -93,5 +93,13 @@
             <legend>Regras de Negócio (RN)</legend>
         </fieldset>
         <script src="components.js"></script>
+        <input type="checkbox" name="viewDC" id="viewDC">
+        <div class="viewDC">
+            <span>ID: {ID}</span>
+            <span>NOME: {NOME}</span>
+            <span>DESCRIÇÃO: {DESCRIÇÃO}</span>
+            <span>DEPENDÊNCIAS: {DEPENDÊNCIAS}</span>
+            <span>CONFLITOS: {CONFLITOS}</span>
+        </div>
     </body>
 </html>

@@ -90,6 +90,7 @@ body {
     margin-bottom: 10px;
 }
 
+/* Bordas pontilhadas */
 .RF{
     border-color: green;
 }
@@ -100,23 +101,74 @@ body {
     border-color: indigo;
 }
 
-#divSpanDepenID,
-#divSpanConfliID {
-    font-size: small;
-    border-radius: 10%;
-    max-width: fit-content;
-    padding: 5px 5px;
-    margin: 5px
-}
-#divSpanDepenID{
-    background-color: #6eda2c;
-}
-#divSpanConfliID{
-    background-color: #da0001;
-}
-
 #divDepenID,
 #divConfliID {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Preview das dependências e conflitos */
+.viewDC {
+    --backgroundColor: white;
+    --borderColor: black;
+    display: none;
+    height: auto;
+    width: 35vw;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    background-color: var(--backgroundColor);
+    border-color: var(--borderColor);
+    /* opacity: .6; */
+    border-style: dashed;
+    border-width: .4em;
+    border-radius: 20px;
+    padding: 0px 10px 10px 15px;
+    margin-bottom: 10px;
+}
+input:checked + div.viewDC{
+    display: block;
+}
+input {
+    display: block;
+}
+
+.divSpanDepenID,
+.divSpanConfliID{
+    font-size: small;
+    border-radius: 7%;
+    max-width: fit-content;
+    padding: 7px 14px;
+    margin: 5px;
+    cursor: default
+}
+.divSpanDepenID,
+.divSpanDepenID > button{
+    background-color: #6eda2c;
+}
+.divSpanConfliID,
+.divSpanConfliID > button{
+    background-color: #da0001;
+}
+.divSpanDepenID > button, 
+.divSpanConfliID > button{
+    /* background-color: transparent; */
+    border: none !important;
+    cursor: pointer;
+    border-radius: 25%;
+    margin-left: 5px
+}
+.divSpanDepenID > button:hover,
+.divSpanConfliID > button:hover{
+    /* Serve para escurecer cor aplicada */
+    filter: brightness(75%);
+}
+#divDepenID{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#divConfliID{
     display: flex;
     flex-wrap: wrap;
 }

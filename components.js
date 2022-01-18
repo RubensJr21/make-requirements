@@ -131,25 +131,47 @@ class Box extends HTMLElement {
             
             createDependencie: (dependencie) => {
                 var div = document.createElement("div")
-                div.id = "divSpanDepenID"
+                div.id = dependencie
+                div.classList.add("divSpanDepenID")
+                div.textContent = dependencie
+                div.onmousemove = (event) => {
+                    const x = event.x
+                    const y = event.y
+                    const newX = x+5
+                    const newY = y-5
+                    const viewDC = document.querySelector(".viewDC")
 
-                var span = document.createElement("span")
-                span.textContent = dependencie
-                span.id = dependencie
+                    const sizeBodyY = document.body.offsetHeight
+                    if(y + viewDC.offsetHeight >= sizeBodyY && newY-viewDC.offsetHeight > 5){
+                        viewDC.style.left = `${newX}px`
+                        viewDC.style.top = `${newY-viewDC.offsetHeight}px`
+                    } else{
+                        viewDC.style.left = `${newX}px`
+                        viewDC.style.top = `${newY}px`
+                    }
 
-                var button = document.createElement("button")
-                button.textContent = "X"
-                button.onclick = () => {
+                    const input = document.querySelector("#viewDC")
+                    if (!input.checked){
+                        input.checked = true
+                        this.populatePreview(viewDC, div)
+                        viewDC.style.setProperty("--borderColor", "#6eda2c")
+                    }
+                }
+                div.onmouseout = () => {
+                    const viewDC = document.querySelector("#viewDC")
+                    viewDC.checked = false
+                }
+                div.ondblclick = (e) => {
                     this.dependencies.forEach((element, index, array) => {
                         element.remDependents(this)
                     })
-                    const dependencie = button.parentElement
+                    const dependencie = e.path[0]
                     const divDependencies = dependencie.parentElement
                     divDependencies.removeChild(dependencie)
+                    // Esconde o Preview
+                    const viewDC = document.querySelector("#viewDC")
+                    viewDC.checked = false
                 }
-                
-                div.appendChild(span)
-                div.appendChild(button)
                 return div
             },
             createDependenciesBox: () => {
@@ -185,24 +207,52 @@ class Box extends HTMLElement {
             
             createConflict: (conflict) => {
                 var div = document.createElement("div")
-                div.id = "divSpanConfliID"
+                div.id = conflict
+                div.classList.add("divSpanConfliID")
+                div.textContent = conflict
+                div.onmousemove = (event) => {
+                    const x = event.x
+                    const y = event.y
+                    const newX = x+5
+                    const newY = y-5
+                    const viewDC = document.querySelector(".viewDC")
 
-                var span = document.createElement("span")
-                span.textContent = conflict
+                    const sizeBodyY = document.body.offsetHeight
+                    if(y + viewDC.offsetHeight >= sizeBodyY && newY-viewDC.offsetHeight > 5){
+                        viewDC.style.left = `${newX}px`
+                        viewDC.style.top = `${newY-viewDC.offsetHeight}px`
+                    } else{
+                        viewDC.style.left = `${newX}px`
+                        viewDC.style.top = `${newY}px`
+                    }
 
-                var button = document.createElement("button")
-                button.textContent = "X"
-                button.onclick = () => {
+                    const input = document.querySelector("#viewDC")
+                    if (!input.checked){
+                        input.checked = true
+                        console.log(input.checked)
+                        console.log(event)
+                        this.populatePreview(viewDC, div)
+                        viewDC.style.setProperty("--borderColor", "#da0001")
+                    }
+                }
+                div.onmouseout = () => {
+                    const viewDC = document.querySelector("#viewDC")
+                    viewDC.checked = false
+                    console.log(viewDC.checked)
+                }
+
+                div.ondblclick = (e) => {
                     this.conflicts.forEach((element, index, array) => {
                         element.remConflicting(this)
                     })
-                    const conflict = button.parentElement
+                    const conflict = e.path[0]
                     const divConflicts = conflict.parentElement
                     divConflicts.removeChild(conflict)
+                    // Esconde o Preview
+                    const viewDC = document.querySelector("#viewDC")
+                    viewDC.checked = false
                 }
 
-                div.appendChild(span)
-                div.appendChild(button)
                 return div
             },
     
@@ -275,6 +325,82 @@ class Box extends HTMLElement {
                 return button
             }
         }
+    }
+
+    getInfos(){
+        console.log(this.id)
+        const root = this.shadowRoot
+        // console.log(root)
+        return {
+            id: this.id,
+            nome: root.getElementById("nome").value,
+            "descrição": root.getElementById("descricao").value,
+            "dependências": this.dependencies,
+            conflitos: this.conflicts,
+        }
+    }
+
+    populatePreview (v, currentElement) {
+        const element = document.querySelector(`#${currentElement.textContent}`)
+        
+        const info = element.getInfos() 
+        console.log(info)
+
+        const id = document.createElement("h1")
+        id.textContent = `ID: ${info.id}`
+
+        const nome = document.createElement("h2")
+        nome.textContent = `Nome: ${info.nome}`
+
+        const descricao = document.createElement("h2")
+        descricao.textContent = `Descrição: ${info["descrição"]}`
+                            
+        const dependencies = document.createElement("fieldset")
+        var legendDepen = document.createElement("legend")
+        legendDepen.innerText = "Dependências:"
+        var divDepenID = document.createElement("div")
+        divDepenID.id = "divDepenID"
+        info["dependências"].forEach((element, index, array) => {
+            var div = document.createElement("div")
+            div.id = element.id
+            div.classList.add("divSpanDepenID")
+            div.textContent = element.id
+            divDepenID.appendChild(div)
+        })
+        dependencies.appendChild(legendDepen)
+        dependencies.appendChild(divDepenID)
+
+        const conflitos = document.createElement("fieldset")
+        var legendConf = document.createElement("legend")
+        legendConf.innerText = "Conflitos:"
+        var divConfliID = document.createElement("div")
+        divConfliID.id = "divConfliID"
+        info.conflitos.forEach((element, index, array) => {
+            var div = document.createElement("div")
+            div.id = element.id
+            div.classList.add("divSpanConfliID")
+            div.textContent = element.id
+            divConfliID.appendChild(div)
+        })
+        conflitos.appendChild(legendConf)
+        conflitos.appendChild(divConfliID)
+
+        window.parentElement = this.parentElement
+        const root = this.parentElement
+        v.innerHTML = ""
+        v.appendChild(id)
+        v.appendChild(nome)
+        v.appendChild(descricao)
+        v.appendChild(dependencies)
+        v.appendChild(conflitos)
+        const idPure = currentElement.id.replace(/[^A-Z]/g, "")
+        console.log(idPure)
+        const tagNames = {
+            "RF": "green",
+            "RNF": "orangered",
+            "RN": "indigo"
+        }
+        v.style.setProperty("--backgroundColor", tagNames[idPure])
     }
 
     addDependencies(element){
@@ -369,32 +495,33 @@ class Box extends HTMLElement {
     margin-bottom: 10px;
 }
 ${types[type] || ""}
-#divSpanDepenID,
-#divSpanConfliID{
+.divSpanDepenID,
+.divSpanConfliID{
     font-size: small;
     border-radius: 7%;
     max-width: fit-content;
-    padding: 5px 5px;
-    margin: 5px
+    padding: 7px 14px;
+    margin: 5px;
+    cursor: default
 }
-#divSpanDepenID,
-#divSpanDepenID > button{
+.divSpanDepenID,
+.divSpanDepenID > button{
     background-color: #6eda2c;
 }
-#divSpanConfliID,
-#divSpanConfliID > button{
+.divSpanConfliID,
+.divSpanConfliID > button{
     background-color: #da0001;
 }
-#divSpanDepenID > button, 
-#divSpanConfliID > button{
+.divSpanDepenID > button, 
+.divSpanConfliID > button{
     /* background-color: transparent; */
     border: none !important;
     cursor: pointer;
     border-radius: 25%;
     margin-left: 5px
 }
-#divSpanDepenID > button:hover,
-#divSpanConfliID > button:hover{
+.divSpanDepenID > button:hover,
+.divSpanConfliID > button:hover{
     /* Serve para escurecer cor aplicada */
     filter: brightness(75%);
 }
