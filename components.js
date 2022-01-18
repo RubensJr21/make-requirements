@@ -19,6 +19,34 @@ class Box extends HTMLElement {
         // conflitantes
         this.conflicting = []
 
+        this.eventFunctions = {
+            onMouseMove: (borderColor, elementForFill) => {
+                return (event) => {
+                    const x = event.x
+                    const y = event.y
+                    const newX = x+5
+                    const newY = y+10
+                    const viewDC = document.querySelector(".viewDC")
+
+                    const sizeBodyY = document.body.offsetHeight
+                    if(y + viewDC.offsetHeight >= sizeBodyY && newY-viewDC.offsetHeight > 5){
+                        viewDC.style.left = `${newX}px`
+                        viewDC.style.top = `${newY-viewDC.offsetHeight}px`
+                    } else{
+                        viewDC.style.left = `${newX}px`
+                        viewDC.style.top = `${newY+10}px`
+                    }
+
+                    const input = document.querySelector("#viewDC")
+                    if (!input.checked){
+                        input.checked = true
+                        this.functions.populatePreview(viewDC, elementForFill)
+                        viewDC.style.setProperty("--borderColor", borderColor)
+                    }
+                }
+            }
+        }
+
         this.functions = {
             createRF: (id) => {
                 var div = document.createElement("div")
@@ -138,29 +166,7 @@ class Box extends HTMLElement {
                 if(config.isPreview) return div
 
                 div.title = "Clique duas vezes para deletar"
-                div.onmousemove = (event) => {
-                    const x = event.x
-                    const y = event.y
-                    const newX = x+5
-                    const newY = y+10
-                    const viewDC = document.querySelector(".viewDC")
-
-                    const sizeBodyY = document.body.offsetHeight
-                    if(y + viewDC.offsetHeight >= sizeBodyY && newY-viewDC.offsetHeight > 5){
-                        viewDC.style.left = `${newX}px`
-                        viewDC.style.top = `${newY-viewDC.offsetHeight}px`
-                    } else{
-                        viewDC.style.left = `${newX}px`
-                        viewDC.style.top = `${newY+10}px`
-                    }
-
-                    const input = document.querySelector("#viewDC")
-                    if (!input.checked){
-                        input.checked = true
-                        this.functions.populatePreview(viewDC, div)
-                        viewDC.style.setProperty("--borderColor", "#6eda2c")
-                    }
-                }
+                div.onmousemove = this.eventFunctions.onMouseMove("#6eda2c", div)
                 div.onmouseout = () => {
                     const viewDC = document.querySelector("#viewDC")
                     viewDC.checked = false
@@ -221,29 +227,7 @@ class Box extends HTMLElement {
                 if(config.isPreview) return div
 
                 div.title = "Clique duas vezes para deletar"
-                div.onmousemove = (event) => {
-                    const x = event.x
-                    const y = event.y
-                    const newX = x+5
-                    const newY = y+10
-                    const viewDC = document.querySelector(".viewDC")
-
-                    const sizeBodyY = document.body.offsetHeight
-                    if(y + viewDC.offsetHeight >= sizeBodyY && newY-viewDC.offsetHeight > 5){
-                        viewDC.style.left = `${newX}px`
-                        viewDC.style.top = `${newY-viewDC.offsetHeight+10}px`
-                    } else{
-                        viewDC.style.left = `${newX}px`
-                        viewDC.style.top = `${newY+10}px`
-                    }
-
-                    const input = document.querySelector("#viewDC")
-                    if (!input.checked){
-                        input.checked = true
-                        this.functions.populatePreview(viewDC, div)
-                        viewDC.style.setProperty("--borderColor", "#da0001")
-                    }
-                }
+                div.onmousemove = this.eventFunctions.onMouseMove("#da0001", div)
                 div.onmouseout = () => {
                     const viewDC = document.querySelector("#viewDC")
                     viewDC.checked = false
