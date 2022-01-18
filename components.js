@@ -320,8 +320,8 @@ class Box extends HTMLElement {
             fillPreview: (v, currentElement) => {
                 const element = document.querySelector(`#${currentElement.textContent}`)
                 
-                const info = element.getInfos()
-        
+                const info = element.getInfos({type: "short"})
+                
                 const id = document.createElement("h1")
                 id.textContent = `ID: ${info.id}`
         
@@ -362,14 +362,23 @@ class Box extends HTMLElement {
         }
     }
 
-    getInfos(){
+    getInfos(config = {type: "short"}){
+        /*
+            type: ("short" | "full")
+        */
         const root = this.shadowRoot
-        return {
-            id: this.id,
-            nome: root.getElementById("nome").value,
-            "descrição": root.getElementById("descricao").value,
-            "dependências": this.dependencies,
-            conflitos: this.conflicts,
+        if(config.type === "short") {
+            return {
+                id: this.id,
+                nome: root.getElementById("nome").value,
+                "descrição": root.getElementById("descricao").value,
+                "dependências": this.dependencies,
+                conflitos: this.conflicts,
+            }
+        } else if(config.type === "full"){
+            return {
+                full: true
+            }
         }
     }
 
