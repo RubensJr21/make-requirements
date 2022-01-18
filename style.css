@@ -129,8 +129,8 @@ body {
 input:checked + div.viewDC{
     display: block;
 }
-input {
-    display: block;
+input[id=viewDC] {
+    display:none;
 }
 
 .divSpanDepenID,

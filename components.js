@@ -165,10 +165,9 @@ class Box extends HTMLElement {
                     this.dependencies.forEach((element, index, array) => {
                         element.remDependents(this)
                     })
-                    const dependencie = e.path[0]
-                    const divDependencies = dependencie.parentElement
-                    divDependencies.removeChild(dependencie)
-                    // Esconde o Preview
+                    const dependencie = document.getElementById(e.path[0].id)
+                    this.remDependencies(dependencie)
+                    // Esconde o Preview após remoção
                     const viewDC = document.querySelector("#viewDC")
                     viewDC.checked = false
                 }
@@ -229,8 +228,6 @@ class Box extends HTMLElement {
                     const input = document.querySelector("#viewDC")
                     if (!input.checked){
                         input.checked = true
-                        console.log(input.checked)
-                        console.log(event)
                         this.populatePreview(viewDC, div)
                         viewDC.style.setProperty("--borderColor", "#da0001")
                     }
@@ -238,21 +235,18 @@ class Box extends HTMLElement {
                 div.onmouseout = () => {
                     const viewDC = document.querySelector("#viewDC")
                     viewDC.checked = false
-                    console.log(viewDC.checked)
                 }
 
                 div.ondblclick = (e) => {
                     this.conflicts.forEach((element, index, array) => {
                         element.remConflicting(this)
                     })
-                    const conflict = e.path[0]
-                    const divConflicts = conflict.parentElement
-                    divConflicts.removeChild(conflict)
+                    const conflict = document.getElementById(e.path[0].id)
+                    this.remConflicts(conflict)
                     // Esconde o Preview
                     const viewDC = document.querySelector("#viewDC")
                     viewDC.checked = false
                 }
-
                 return div
             },
     
@@ -328,9 +322,7 @@ class Box extends HTMLElement {
     }
 
     getInfos(){
-        console.log(this.id)
         const root = this.shadowRoot
-        // console.log(root)
         return {
             id: this.id,
             nome: root.getElementById("nome").value,
@@ -344,7 +336,6 @@ class Box extends HTMLElement {
         const element = document.querySelector(`#${currentElement.textContent}`)
         
         const info = element.getInfos() 
-        console.log(info)
 
         const id = document.createElement("h1")
         id.textContent = `ID: ${info.id}`
@@ -394,7 +385,6 @@ class Box extends HTMLElement {
         v.appendChild(dependencies)
         v.appendChild(conflitos)
         const idPure = currentElement.id.replace(/[^A-Z]/g, "")
-        console.log(idPure)
         const tagNames = {
             "RF": "green",
             "RNF": "orangered",
