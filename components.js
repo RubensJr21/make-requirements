@@ -133,12 +133,13 @@ class Box extends HTMLElement {
                 var div = document.createElement("div")
                 div.id = dependencie
                 div.classList.add("divSpanDepenID")
+                div.title = "Clique duas vezes para deletar"
                 div.textContent = dependencie
                 div.onmousemove = (event) => {
                     const x = event.x
                     const y = event.y
                     const newX = x+5
-                    const newY = y-5
+                    const newY = y+10
                     const viewDC = document.querySelector(".viewDC")
 
                     const sizeBodyY = document.body.offsetHeight
@@ -147,7 +148,7 @@ class Box extends HTMLElement {
                         viewDC.style.top = `${newY-viewDC.offsetHeight}px`
                     } else{
                         viewDC.style.left = `${newX}px`
-                        viewDC.style.top = `${newY}px`
+                        viewDC.style.top = `${newY+10}px`
                     }
 
                     const input = document.querySelector("#viewDC")
@@ -213,16 +214,16 @@ class Box extends HTMLElement {
                     const x = event.x
                     const y = event.y
                     const newX = x+5
-                    const newY = y-5
+                    const newY = y+10
                     const viewDC = document.querySelector(".viewDC")
 
                     const sizeBodyY = document.body.offsetHeight
                     if(y + viewDC.offsetHeight >= sizeBodyY && newY-viewDC.offsetHeight > 5){
                         viewDC.style.left = `${newX}px`
-                        viewDC.style.top = `${newY-viewDC.offsetHeight}px`
+                        viewDC.style.top = `${newY-viewDC.offsetHeight+10}px`
                     } else{
                         viewDC.style.left = `${newX}px`
-                        viewDC.style.top = `${newY}px`
+                        viewDC.style.top = `${newY+10}px`
                     }
 
                     const input = document.querySelector("#viewDC")
