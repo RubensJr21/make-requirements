@@ -40,7 +40,7 @@ class Box extends HTMLElement {
                     const input = document.querySelector("#viewDC")
                     if (!input.checked){
                         input.checked = true
-                        this.functions.populatePreview(viewDC, elementForFill)
+                        this.functions.fillPreview(viewDC, elementForFill)
                         viewDC.style.setProperty("--borderColor", borderColor)
                     }
                 }
@@ -317,7 +317,7 @@ class Box extends HTMLElement {
                 return button
             },
 
-            populatePreview: (v, currentElement) => {
+            fillPreview: (v, currentElement) => {
                 const element = document.querySelector(`#${currentElement.textContent}`)
                 
                 const info = element.getInfos()
