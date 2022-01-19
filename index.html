@@ -120,7 +120,7 @@
                     if(event.target === divInfoExport) closeInfoExport()
                 }
                 btnFechar.onclick = (event) => closeInfoExport()
-                btnCopiar.onclick = (event) => console.log("Clicou no botão")
+                btnCopiar.onclick = (event) => copyToClipboard(event)
                 
                 iconExport.onclick = (event) => callExport()
             })()
@@ -171,6 +171,16 @@
                 const exportedRN = infoAllSepareted.RN.reduce(formatExport, "============RN============\n\n")
                 
                 document.querySelector(".infoExport > pre").textContent = exportedRF+exportedRNF+exportedRN
+            }
+            async function copyToClipboard(event){
+                const txtExportCompiled = document.querySelector(".infoExport > pre").textContent
+                await navigator.clipboard.writeText(txtExportCompiled)
+                event.target.classList.toggle("clicado")
+                event.target.textContent = "Copiado..."
+                setTimeout(() => {
+                    event.target.classList.toggle("clicado")
+                    event.target.textContent = "Copiar"
+                }, 1500)
             }
         </script>
     </body>
