@@ -35,7 +35,10 @@
             regrasDeNegocio.appendChild(RN);
         }
         const callConfig = () => alert("Configuração");
-        const callExport = () => alert("Exportação");
+        const callExport = () => {
+            infoExport.checked = true
+            compilaInfos()
+        };
     </script>
 
     <body>
@@ -101,5 +104,39 @@
             <span>DEPENDÊNCIAS: {DEPENDÊNCIAS}</span>
             <span>CONFLITOS: {CONFLITOS}</span>
         </div>
+        <input type="checkbox" name="infoExport" id="infoExport">
+        <div class="infoExport" title="Clique para fechar o painel de exportação">
+            <button id="fechar">x</button>
+            <pre></pre>
+            <button id="copiar">Copiar</button>
+        </div>
+        <script>
+            (() => {
+                const divInfoExport = document.querySelector(".infoExport")
+                const btnFechar = document.querySelector(".infoExport > button#fechar")
+                const btnCopiar = document.querySelector(".infoExport > button#copiar")
+
+                divInfoExport.onclick = (event) => {
+                    if(event.target === divInfoExport) closeInfoExport()
+                }
+                btnFechar.onclick = (event) => closeInfoExport()
+
+
+                btnCopiar.onclick = (event) => console.log("Clicou no botão")
+            })()
+            function closeInfoExport(){
+                infoExport.checked = false
+            }
+            function compilaInfos(){
+                const x = qtd => {
+                    str = `${(new Date()).toUTCString()}\n`
+                    for (let i = 0; i < qtd; i++) {
+                        str +=  ` ${i+1}`.slice(-2) + ` Seu texto aqui | Seu texto aqui | Seu texto aqui | Seu texto aqui\n`
+                    }
+                    return str
+                }
+                document.querySelector(".infoExport > pre").textContent = x(10)
+            }
+        </script>
     </body>
 </html>
