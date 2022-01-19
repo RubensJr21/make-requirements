@@ -385,7 +385,7 @@ class Box extends HTMLElement {
                 "descrição": root.getElementById("descricao").value,
                 origem: root.getElementById("origem").value,
                 "responsável": root.getElementById("responsavel").value,
-                "interessados": root.getElementById("interessados").value,
+                interessados: root.getElementById("interessados").value,
                 prioridade: root.getElementById("prioridade").value,
                 "dependências": this.dependencies.map(item => item.id),
                 conflitos: this.conflicts.map(item => item.id),
