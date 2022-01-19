@@ -321,7 +321,10 @@ class Box extends HTMLElement {
                 const element = document.querySelector(`#${currentElement.textContent}`)
                 
                 const info = element.getInfos({type: "short"})
+                const infoFull = element.getInfos({type: "full"})
                 
+                console.log(infoFull)
+
                 const id = document.createElement("h1")
                 id.textContent = `ID: ${info.id}`
         
@@ -341,7 +344,7 @@ class Box extends HTMLElement {
                 const conflitos = this.functions.createConflictsBox({ isPreview: true })
                 var divConfliID = conflitos.querySelector("div#divConfliID")
                 info.conflitos.forEach((element, index, array) => {
-                    divConfliID.appendChild(this.functions.createConflict(element.id, { isPreview }))
+                    divConfliID.appendChild(this.functions.createConflict(element.id, { isPreview: true }))
                 })
                 conflitos.appendChild(divConfliID)
         
@@ -377,7 +380,15 @@ class Box extends HTMLElement {
             }
         } else if(config.type === "full"){
             return {
-                full: true
+                id: this.id,
+                nome: root.getElementById("nome").value,
+                "descrição": root.getElementById("descricao").value,
+                origem: root.getElementById("origem").value,
+                "responsável": root.getElementById("responsavel").value,
+                "interessados": root.getElementById("interessados").value,
+                prioridade: root.getElementById("prioridade").value,
+                "dependências": this.dependencies.map(item => item.id),
+                conflitos: this.conflicts.map(item => item.id),
             }
         }
     }
