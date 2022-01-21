@@ -1,3 +1,4 @@
+/* ==> root <== */
 body {
     margin: 0;
 	padding: 0;
@@ -41,14 +42,6 @@ body {
 }
 
 @keyframes lightUpIcon {
-    /* from {
-        color: black;
-        filter: drop-shadow(0 0 0 black)
-    }
-    to {
-        color: var(--color-lightUp);
-        filter: drop-shadow(0 0 30px var(--color-lightUp))
-    } */
     0% {
         color: black;
         filter: drop-shadow(0 0 0 black)
@@ -63,8 +56,7 @@ body {
     }
 }
 
-/* Barra de Controle */
-
+/* => Barra de Controle */
 #controle {
     height: auto;
     grid-column-start: 1;
@@ -74,40 +66,12 @@ body {
     margin-top: 20px;
 }
 
-/* Requisitos e Regras */
-
 /* Containers para as boxes */
 .requisitos_regras {
     overflow: auto;
 }
 
-/* Objeto de BOX as caixas de requisitos e regras */
-.requisito_regra {
-    border-style: dashed;
-    border-width: 2px;
-    border-radius: 20px;
-    padding: 0px 10px 10px 15px;
-    margin-bottom: 10px;
-}
-
-/* Bordas pontilhadas */
-.RF{
-    border-color: green;
-}
-.RNF{
-    border-color: orangered;
-}
-.RN{
-    border-color: indigo;
-}
-
-#divDepenID,
-#divConfliID {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-/* Preview das dependências e conflitos */
+/* START PREVIEW (dependências e conflitos) */
 .viewDC {
     --backgroundColor: white;
     --borderColor: black;
@@ -132,8 +96,10 @@ input[id=viewDC]:checked + div.viewDC{
 input[id=viewDC] {
     display:none;
 }
+/* END PREVIEW (dependências e conflitos) */
 
-/* Export das informações */
+
+/* START EXPORT (Requisitos) */
 .infoExport{
     background: rgb(0, 255, 255, .5);
     /* padding: 2em; */
@@ -142,6 +108,7 @@ input[id=viewDC] {
     height: 100vh;
     display: none;
 }
+
 .infoExport > pre{
     display: block;
     background-color: #1c1c1f;
@@ -156,25 +123,21 @@ input[id=viewDC] {
     overflow: auto;
     box-shadow: 4px 6px 11px rgb(0 0 0 / 80%);
 }
-
 .infoExport > pre::-webkit-scrollbar{
     border: solid 3px transparent;
 }
-
 .infoExport > pre::-webkit-scrollbar-thumb {
     box-shadow: inset 0 0 10px 10px white;
     border: solid 3px transparent;
     border-radius: 50px;
     margin-right: 10px;
 }
-
 .infoExport > pre::-webkit-scrollbar-track {
     box-shadow: inset 0 0 10px 10px gray;
     border: solid 5px transparent;
     border-radius: 50px;
     margin-right: 10px;
 }
-
 
 .infoExport > button[id="copiar"]{
     font-size: .9em;
@@ -217,43 +180,4 @@ input[id=infoExport]:checked + div.infoExport{
 input[id=infoExport] {
     display:none;
 }
-
-.divSpanDepenID,
-.divSpanConfliID{
-    font-size: small;
-    border-radius: 7%;
-    max-width: fit-content;
-    padding: 7px 14px;
-    margin: 5px;
-    cursor: default
-}
-.divSpanDepenID,
-.divSpanDepenID > button{
-    background-color: #6eda2c;
-}
-.divSpanConfliID,
-.divSpanConfliID > button{
-    background-color: #da0001;
-}
-.divSpanDepenID > button, 
-.divSpanConfliID > button{
-    /* background-color: transparent; */
-    border: none !important;
-    cursor: pointer;
-    border-radius: 25%;
-    margin-left: 5px
-}
-.divSpanDepenID > button:hover,
-.divSpanConfliID > button:hover{
-    /* Serve para escurecer cor aplicada */
-    filter: brightness(75%);
-}
-#divDepenID{
-    display: flex;
-    flex-wrap: wrap;
-}
-
-#divConfliID{
-    display: flex;
-    flex-wrap: wrap;
-}
+/* END EXPORT (Requisitos) */

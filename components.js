@@ -486,6 +486,12 @@ class Box extends HTMLElement {
     margin-bottom: 10px;
 }
 ${types[type] || ""}
+#divDepenID,
+#divConfliID {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .divSpanDepenID,
 .divSpanConfliID{
     font-size: small;
@@ -495,35 +501,15 @@ ${types[type] || ""}
     margin: 5px;
     cursor: default
 }
-.divSpanDepenID,
-.divSpanDepenID > button{
+.divSpanDepenID{
     background-color: #6eda2c;
 }
-.divSpanConfliID,
-.divSpanConfliID > button{
+.divSpanConfliID{
     background-color: #da0001;
 }
-.divSpanDepenID > button, 
-.divSpanConfliID > button{
-    /* background-color: transparent; */
-    border: none !important;
-    cursor: pointer;
-    border-radius: 25%;
-    margin-left: 5px
-}
-.divSpanDepenID > button:hover,
-.divSpanConfliID > button:hover{
-    /* Serve para escurecer cor aplicada */
-    filter: brightness(75%);
-}
-#divDepenID{
-    display: flex;
-    flex-wrap: wrap;
-}
-
-#divConfliID{
-    display: flex;
-    flex-wrap: wrap;
+.divSpanDepenID:hover,
+.divSpanConfliID:hover{
+    filter: brightness(85%);
 }
         `
         return style
