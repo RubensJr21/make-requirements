@@ -450,7 +450,6 @@ class Box extends HTMLElement {
         div.innerHTML = ""
         this.conflicts.forEach((element, index, array) => {
             div.appendChild(this.functions.createConflict(element.id))
-            // console.log(element.id)
         })
     }
     addConflicting(element){
@@ -554,43 +553,32 @@ ${types[type] || ""}
         }
         setID()
     }
+
+    
+    build(type){
+        const shadow = this.attachShadow({mode: "open"})
+        var div = this.fill(type)
+        shadow.appendChild(this.createStyle(type))
+        shadow.appendChild(div)
+    }
 }
 
 class RequisitoFuncional extends Box {
     constructor(){
         super()
-        this.build()
-    }
-    build(){
-        const shadow = this.attachShadow({mode: "open"})
-        var div = this.fill("RF")
-        shadow.appendChild(this.createStyle("RF"))
-        shadow.appendChild(div)
+        this.build("RF")
     }
 }
 class RequisitoNaoFuncional extends Box {
     constructor(){
         super()
-        this.build()
-    }
-    build(){
-        const shadow = this.attachShadow({mode: "open"})
-        var div = this.fill("RNF")
-        shadow.appendChild(this.createStyle("RNF"))
-        shadow.appendChild(div)
+        this.build("RNF")
     }
 }
 class RegraDeNegocio extends Box {
     constructor(){
         super()
-        this.build()
-    }
-
-    build(){
-        const shadow = this.attachShadow({mode: "open"})
-        var div = this.fill("RN")
-        shadow.appendChild(this.createStyle("RN"))
-        shadow.appendChild(div)
+        this.build("RN")
     }
 }
 
