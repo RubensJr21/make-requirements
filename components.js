@@ -286,19 +286,7 @@ class Box extends HTMLElement {
                     this.notifyAllDependents({type: "destroy"})
                     this.notifyAllConflicts({type: "destroy"})
                     this.notifyAllConflicting({type: "destroy"})
-                    const tagNames = {
-                        "RF": "mr-rf",
-                        "RNF": "mr-rnf",
-                        "RN": "mr-rn"
-                    }
-                    const boxes = node.querySelectorAll(tagNames[type])
-                    boxes.forEach((boxElement, id) => {
-                        boxElement.id = `${type}${id+1}`
-                        // Atualiza todas as dependências
-                        boxElement.notifyAllDependents({type: "updateID"})
-                        // Atualiza todos os conflitos
-                        boxElement.notifyAllConflicting({type: "updateID"})
-                    })
+                    updateBoxes(type, node)
                 }
                 return button
             },

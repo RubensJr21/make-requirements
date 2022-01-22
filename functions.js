@@ -1,3 +1,20 @@
+function updateBoxes(type, node){
+    const tagNames = {
+        "RF": "mr-rf",
+        "RNF": "mr-rnf",
+        "RN": "mr-rn"
+    }
+    console.log(tagNames)
+    const boxes = node.querySelectorAll(tagNames[type])
+    boxes.forEach((boxElement, id) => {
+        boxElement.id = `${type}${id+1}`
+        // Atualiza todas as dependências
+        boxElement.notifyAllDependents({type: "updateID"})
+        // Atualiza todos os conflitos
+        boxElement.notifyAllConflicting({type: "updateID"})
+    })
+}
+
 function addRF() {
     const requisitosFuncionais = document.getElementById("requisitosFuncionais");
     const countId = requisitosFuncionais.childElementCount;
