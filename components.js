@@ -48,7 +48,7 @@ class Box extends HTMLElement {
         }
 
         this.functions = {
-            createRF: (id) => {
+            createR: (id) => {
                 var div = document.createElement("div")
                 if(id) div.id = id
                 return div;
@@ -63,6 +63,7 @@ class Box extends HTMLElement {
             
             createName: () => {
                 var div = document.createElement("div")
+                div.id = "divNome"
                 var label = document.createElement("label")
                 label.for = "nome"
                 label.innerText = "Nome:"
@@ -76,21 +77,25 @@ class Box extends HTMLElement {
             },
             
             createDescription: () => {
-                var div = document.createElement("div")
-                var label = document.createElement(label)
-                label.for = "descricao"
-                label.innerText = "Descrição:"
-                var input = document.createElement("input")
-                input.type = "text"
-                input.name = "descricao"
-                input.id = "descricao"
-                div.appendChild(label)
-                div.appendChild(input)
-                return div;
+                var fieldset = document.createElement("fieldset")
+                fieldset.id = "fieldsetDescricao"
+
+                var legend = document.createElement("legend")
+                legend.innerText = "Descrição:"
+
+                var textarea = document.createElement("textarea")
+                textarea.name = "descricao"
+                textarea.id = "descricao"
+
+                fieldset.appendChild(legend)
+                fieldset.appendChild(textarea)
+
+                return fieldset;
             },
             
             createOrigin: () => {
                 var div = document.createElement("div")
+                div.id = "divOrigem"
                 var label = document.createElement(label)
                 label.for = "origem"
                 label.innerText = "Origem:"
@@ -105,6 +110,7 @@ class Box extends HTMLElement {
             
             createResponsible: () => {
                 var div = document.createElement("div")
+                div.id = "divResponsavel"
                 var label = document.createElement(label)
                 label.for = "responsavel"
                 label.innerText = "Responsável:"
@@ -119,6 +125,7 @@ class Box extends HTMLElement {
             
             createInterested: () => {
                 var div = document.createElement("div")
+                div.id = "divInteressados"
                 var label = document.createElement(label)
                 label.for = "interessados"
                 label.innerText = "Interessados:"
@@ -133,6 +140,7 @@ class Box extends HTMLElement {
             
             createPriority: () => {
                 var div = document.createElement("div")
+                div.id = "divPrioridade"
                 var label = document.createElement(label)
                 label.for = "prioridade"
                 label.innerText = "Prioridade:"
@@ -144,11 +152,11 @@ class Box extends HTMLElement {
                 var op3 = document.createElement("option")
                 op1.value = "Desejável"
                 op1.innerText = "Desejável"
-                op1.selected = true
                 op2.value = "Importante"
                 op2.innerText = "Importante"
                 op3.value = "Imprescindível"
                 op3.innerText = "Imprescindível"
+                op3.selected = true
                 select.appendChild(op1)
                 select.appendChild(op2)
                 select.appendChild(op3)
@@ -283,6 +291,7 @@ class Box extends HTMLElement {
     
             createRemoveButton: (type) => {
                 var button = document.createElement("button")
+                button.id = "remover"
                 button.innerText = "Remover"
                 button.onclick = () => {
                     // console.log(this.parentElement)
@@ -486,14 +495,37 @@ class Box extends HTMLElement {
     margin-bottom: 10px;
 }
 ${types[type] || ""}
-#divDepenID,
-#divConfliID {
+fieldset#fieldsetDescricao > textarea#descricao
+{
+    width: -webkit-fill-available;
+	height: 5.5vh;
+    resize: none;
+    font-size: 1.2em;
+}
+
+#fieldsetDescricao, #divNome, #divOrigem,
+#divResponsavel, #divInteressados, #divPriority
+{
+    margin-inline-start: 2px;
+    margin-inline-end: 2px;
+    margin-bottom: 6px;
+    display: flex;
+}
+
+#divNome > input, #divOrigem > input,
+#divResponsavel > input, #divInteressados > input,
+#divPriority > select
+{
+    flex-grow: 1;
+    margin-left: 5px;
+}
+
+#divDepenID, #divConfliID {
     display: flex;
     flex-wrap: wrap;
 }
 
-.divSpanDepenID,
-.divSpanConfliID{
+.divSpanDepenID, .divSpanConfliID{
     font-size: small;
     border-radius: 7%;
     max-width: fit-content;
@@ -507,16 +539,19 @@ ${types[type] || ""}
 .divSpanConfliID{
     background-color: #da0001;
 }
-.divSpanDepenID:hover,
-.divSpanConfliID:hover{
+.divSpanDepenID:hover, .divSpanConfliID:hover{
     filter: brightness(85%);
+}
+
+.requisito_regra > button#remover {
+    margin: 6px 0px;
 }
         `
         return style
     }
 
     fill(type){
-        var div = this.functions.createRF(`${type}`)
+        var div = this.functions.createR(`${type}`)
         div.classList.add("requisito_regra")
         div.classList.add(type)
         div.appendChild(this.functions.createID("{ID}"))
