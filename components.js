@@ -1,3 +1,8 @@
+String.prototype.capitalize = function() {
+    // Converte a primeira letra para maiúscula
+	return this.charAt(0).toUpperCase() + this.substr(1);
+}
+
 var observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
         if (mutation.type === "attributes") {
@@ -20,7 +25,8 @@ class Box extends HTMLElement {
         this.conflicting = []
 
         this.eventFunctions = {
-            onMouseMove: (borderColor, elementForFill) => {
+            // Técnica de retornar uma outra função para ter valor "dinamicamente" estáticos
+            curryingOnMouseMove: (borderColor, elementForFill) => {
                 return (event) => {
                     const x = event.x
                     const y = event.y
@@ -46,8 +52,79 @@ class Box extends HTMLElement {
                 }
             }
         }
-
         this.functions = {
+            createDivInput: ({id, title}) => {
+                title = title.toLowerCase()
+
+                var div = document.createElement("div")
+                div.id = `div${(id ? id : title).capitalize()}`
+
+                var label = document.createElement("label")
+                label.for = id ? id : title
+                label.innerText = `${title.capitalize()}:`
+
+                var input = document.createElement("input")
+                input.type = "text"
+                input.name = id ? id :title
+                input.id = id ? id : title
+
+                div.appendChild(label)
+                div.appendChild(input)
+                return div;
+            },
+
+            createDependencieOrConflict: ({
+                className, textContent, isPreview,
+                getOnMouseMove, onMouseOut, onDblClick
+            }) => {
+                var div = document.createElement("div")
+                // textContent não se repete
+                div.id = textContent
+                div.classList.add(className);
+                div.textContent = textContent
+                
+                if(isPreview) return div
+                
+                div.title = "Clique duas vezes para deletar"
+                div.onmousemove = getOnMouseMove(div)
+                div.onmouseout = onMouseOut
+
+                div.ondblclick = onDblClick
+                return div
+            },
+            createDependencieBoxOrConflictBox: ({
+                legendTitle, divId, isPreview,
+                inputName, inputId, inputKeyDown
+            }) => {
+                var fieldset = document.createElement("fieldset")
+
+                var legend = document.createElement("legend")
+                legend.innerText = `${legendTitle}:`
+
+                var div = document.createElement("div")
+                div.id = divId
+
+                fieldset.appendChild(legend)
+                fieldset.appendChild(div)
+
+                if(isPreview) return fieldset
+            
+                var input = document.createElement("input")
+                input.type = "text"
+                input.name = inputName
+                input.id = inputId
+                input.onkeydown = (e) => {
+                    // Verifica se tecla pressionada foi enter
+                    // && Se o é uma auto-referência de dependência
+                    if(e.keyCode == 13 && e.target.value != this.id) {
+                        // this == mr-rf OU mr-rnf OU mr-rn
+                        inputKeyDown(document.getElementById(e.target.value))
+                    }
+                }
+                fieldset.appendChild(input)
+                return fieldset
+            },
+
             createR: (id) => {
                 var div = document.createElement("div")
                 if(id) div.id = id
@@ -62,18 +139,7 @@ class Box extends HTMLElement {
             },
             
             createName: () => {
-                var div = document.createElement("div")
-                div.id = "divNome"
-                var label = document.createElement("label")
-                label.for = "nome"
-                label.innerText = "Nome:"
-                var input = document.createElement("input")
-                input.type = "text"
-                input.name = "nome"
-                input.id = "nome"
-                div.appendChild(label)
-                div.appendChild(input)
-                return div;
+                return this.functions.createDivInput({title: "nome"});
             },
             
             createDescription: () => {
@@ -94,48 +160,15 @@ class Box extends HTMLElement {
             },
             
             createOrigin: () => {
-                var div = document.createElement("div")
-                div.id = "divOrigem"
-                var label = document.createElement(label)
-                label.for = "origem"
-                label.innerText = "Origem:"
-                var input = document.createElement("input")
-                input.type = "text"
-                input.name = "origem"
-                input.id = "origem"
-                div.appendChild(label)
-                div.appendChild(input)
-                return div
+                return this.functions.createDivInput({title: "origem"})
             },
             
             createResponsible: () => {
-                var div = document.createElement("div")
-                div.id = "divResponsavel"
-                var label = document.createElement(label)
-                label.for = "responsavel"
-                label.innerText = "Responsável:"
-                var input = document.createElement("input")
-                input.type = "text"
-                input.name = "responsavel"
-                input.id = "responsavel"
-                div.appendChild(label)
-                div.appendChild(input)
-                return div
+                return this.functions.createDivInput({id: "responsavel", title: "Responsável"})
             },
             
             createInterested: () => {
-                var div = document.createElement("div")
-                div.id = "divInteressados"
-                var label = document.createElement(label)
-                label.for = "interessados"
-                label.innerText = "Interessados:"
-                var input = document.createElement("input")
-                input.type = "text"
-                input.name = "interessados"
-                input.id = "interessados"
-                div.appendChild(label)
-                div.appendChild(input)
-                return div
+                return this.functions.createDivInput({title: "interessados"})
             },
             
             createPriority: () => {
@@ -166,127 +199,80 @@ class Box extends HTMLElement {
             },
             
             createDependencie: (dependencie, config = {isPreview: false}) => {
-                var div = document.createElement("div")
-                div.id = dependencie
-                div.classList.add("divSpanDepenID")
-                div.textContent = dependencie
-
-                if(config.isPreview) return div
-
-                div.title = "Clique duas vezes para deletar"
-                div.onmousemove = this.eventFunctions.onMouseMove("#6eda2c", div)
-                div.onmouseout = () => {
-                    const viewDC = document.querySelector("#viewDC")
-                    viewDC.checked = false
-                }
-                div.ondblclick = (e) => {
-                    this.dependencies.forEach((element, index, array) => {
-                        element.remDependents(this)
-                    })
+                const getOnMouseMove = (div) => this.eventFunctions.curryingOnMouseMove("#6eda2c", div);
+                const onMouseOut = () => document.querySelector("#viewDC").checked = false;
+                const onDblClick = (e) => {
+                    this.notifyAllDependencies({type: "destroy"})
                     const dependencie = document.getElementById(e.path[0].id)
-                    this.remDependencies(dependencie)
+                    this.removeDependencies(dependencie)
                     // Esconde o Preview após remoção
-                    const viewDC = document.querySelector("#viewDC")
-                    viewDC.checked = false
+                    document.querySelector("#viewDC").checked = false
                 }
-                return div
+                
+                return this.functions.createDependencieOrConflict({
+                    className: "divSpanDepenID",
+                    textContent: dependencie,
+                    isPreview: config.isPreview,
+                    getOnMouseMove,
+                    onMouseOut,
+                    onDblClick,
+                })
             },
             createDependenciesBox: (config = {isPreview: false}) => {
-                var fieldset = document.createElement("fieldset")
-
-                var legend = document.createElement("legend")
-                legend.innerText = "Dependências:"
-
-                var div = document.createElement("div")
-                div.id = "divDepenID"
-
-                fieldset.appendChild(legend)
-                fieldset.appendChild(div)
-
-                if(config.isPreview) return fieldset
-            
-                var input = document.createElement("input")
-                input.type = "text"
-                input.name = "dependencia"
-                input.id = "dependenciaINPUT"
-                input.onkeydown = (e) => {
-                    // Verifica se tecla pressionada foi enter
-                    // && Se o é uma auto-referência de dependência
-                    if(e.keyCode == 13 && e.target.value != this.id) {
-                        // this == mr-rf OU mr-rnf OU mr-rn
-                        const element = document.getElementById(e.target.value)
-                        if(element && !this.dependencies.includes(element)) {
-                            this.addDependencies(element)
-                            element.addDependent(this)
-                        }
+                const inputKeyDown = (element) => {
+                    if(element && !this.dependencies.includes(element)) {
+                        this.addDependencies(element)
+                        element.addDependent(this)
                     }
                 }
 
-                fieldset.appendChild(input)
-                return fieldset
+                return this.functions.createDependencieBoxOrConflictBox({
+                    legendTitle: "Dependências",
+                    divId: "divDepenID",
+                    isPreview: config.isPreview,
+                    inputName: "dependencia",
+                    inputId: "dependenciaINPUT",
+                    inputKeyDown,
+                })
             },
             
             createConflict: (conflict, config = {isPreview: false}) => {
-                var div = document.createElement("div")
-                div.id = conflict
-                div.classList.add("divSpanConfliID")
-                div.textContent = conflict
-                
-                if(config.isPreview) return div
-
-                div.title = "Clique duas vezes para deletar"
-                div.onmousemove = this.eventFunctions.onMouseMove("#da0001", div)
-                div.onmouseout = () => {
-                    const viewDC = document.querySelector("#viewDC")
-                    viewDC.checked = false
-                }
-
-                div.ondblclick = (e) => {
-                    this.conflicts.forEach((element, index, array) => {
-                        element.remConflicting(this)
-                    })
+                const getOnMouseMove = (div) => this.eventFunctions.curryingOnMouseMove("#da0001", div);
+                const onMouseOut = () => document.querySelector("#viewDC").checked = false;
+                const onDblClick = (e) => {
+                    this.notifyAllConflicts({type: "destroy"})
                     const conflict = document.getElementById(e.path[0].id)
-                    this.remConflicts(conflict)
+                    this.removeConflicts(conflict)
                     // Esconde o Preview após remoção
-                    const viewDC = document.querySelector("#viewDC")
-                    viewDC.checked = false
+                    document.querySelector("#viewDC").checked = false
                 }
-                return div
+                
+                return this.functions.createDependencieOrConflict({
+                    className: "divSpanConfliID",
+                    textContent: conflict,
+                    isPreview: config.isPreview,
+                    getOnMouseMove,
+                    onMouseOut,
+                    onDblClick,
+                })
             },
     
             createConflictsBox: (config = {isPreview: false}) => {
-                var fieldset = document.createElement("fieldset")
-
-                var legend = document.createElement("legend")
-                legend.innerText = "Conflitos:"
-
-                var div = document.createElement("div")
-                div.id = "divConfliID"
-                
-                fieldset.appendChild(legend)
-                fieldset.appendChild(div)
-            
-                if(config.isPreview) return fieldset
-
-                var input = document.createElement("input")
-                input.type = "text"
-                input.name = "conflitos"
-                input.id = "conflitosINPUT"
-                input.onkeydown = (e) => {
-                    // Verifica se tecla pressionada foi enter
-                    // && Se o é uma auto-referência de conflito
-                    if(e.keyCode == 13 && e.target.value != this.id) {
-                        // this == mr-rf OU mr-rnf OU mr-rn
-                        const element = document.getElementById(e.target.value)
-                        if(element && !this.conflicts.includes(element)){
-                            this.addConflicts(element)
-                            element.addConflicting(this)
-                        }
+                const inputKeyDown = (element) => {
+                    if(element && !this.conflicts.includes(element)){
+                        this.addConflicts(element)
+                        element.addConflicting(this)
                     }
                 }
-            
-                fieldset.appendChild(input)
-                return fieldset
+                
+                return this.functions.createDependencieBoxOrConflictBox({
+                    legendTitle: "Conflitos",
+                    divId: "divConfliID",
+                    isPreview: config.isPreview,
+                    inputName: "conflitos",
+                    inputId: "conflitosINPUT",
+                    inputKeyDown,
+                })
             },
     
             createRemoveButton: (type) => {
@@ -294,33 +280,24 @@ class Box extends HTMLElement {
                 button.id = "remover"
                 button.innerText = "Remover"
                 button.onclick = () => {
-                    // console.log(this.parentElement)
                     var node = document.getElementById(this.parentElement.id);
                     node.removeChild(this);
+                    this.notifyAllDependencies({type: "destroy"})
+                    this.notifyAllDependents({type: "destroy"})
+                    this.notifyAllConflicts({type: "destroy"})
+                    this.notifyAllConflicting({type: "destroy"})
                     const tagNames = {
                         "RF": "mr-rf",
                         "RNF": "mr-rnf",
                         "RN": "mr-rn"
                     }
-                    this.dependents.forEach((element,index, array) => {
-                        element.remDependencies(this)
-                    })
-                    this.conflicting.forEach((element,index, array) => {
-                        element.remConflicts(this)
-                    })
                     const boxes = node.querySelectorAll(tagNames[type])
-                    boxes.forEach((item, id) => {
-                        item.id = `${type}${id+1}`
+                    boxes.forEach((boxElement, id) => {
+                        boxElement.id = `${type}${id+1}`
                         // Atualiza todas as dependências
-                        item.dependents.forEach((item, index, array) => {
-                            item.updateDependencies()
-                            item.updateConflicts()
-                        })
+                        boxElement.notifyAllDependents({type: "updateID"})
                         // Atualiza todos os conflitos
-                        item.conflicts.forEach((item, index, array) => {
-                            item.updateDependencies()
-                            item.updateConflicts()
-                        })
+                        boxElement.notifyAllConflicting({type: "updateID"})
                     })
                 }
                 return button
@@ -330,9 +307,6 @@ class Box extends HTMLElement {
                 const element = document.querySelector(`#${currentElement.textContent}`)
                 
                 const info = element.getInfos({type: "short"})
-                const infoFull = element.getInfos({type: "full"})
-                
-                console.log(infoFull)
 
                 const id = document.createElement("h1")
                 id.textContent = `ID: ${info.id}`
@@ -407,7 +381,7 @@ class Box extends HTMLElement {
         this.dependencies.push(element)
         this.updateDependencies()
     }
-    remDependencies(element){
+    removeDependencies(element){
         console.log(`${this.id}:`, this, "não depende mais de", element)
         const d = this.dependencies
         this.dependencies = d.filter((item, index, array) => {
@@ -424,18 +398,38 @@ class Box extends HTMLElement {
             div.appendChild(this.functions.createDependencie(element.id))
         })
     }
+    notifyAllDependencies({type}){
+        /* type = (destroy | updateID) */
+        if(type === "destroy"){
+            this.dependencies.forEach((element, index, array) => {
+                element.removeDependents(this)
+            })
+        }
+    }
     addDependent(element){
         console.log(`${this.id}:`, "Adicionando", element, "como dependente")
         this.dependents.push(element)
         console.log(`${this.id}:`, "dependents", this.dependents)
     }
-    remDependents(element){
+    removeDependents(element){
         console.log(`${this.id}:`, "Removendo", element, "como dependente")
         const d = this.dependents
         this.dependents = d.filter((item, index, array) => {
             return item != element
         })
         console.log(`${this.id}:`, "dependents", this.dependents)
+    }
+    notifyAllDependents({type}){
+        /* type = (destroy | updateID) */
+        if(type === "destroy"){
+            this.dependents.forEach((element, index, array) => {
+                element.removeDependencies(this)
+            })
+        } else if(type === "updateID"){
+            this.dependents.forEach((element,index, array) => {
+                element.updateDependencies()
+            })
+        }
     }
 
 
@@ -444,7 +438,7 @@ class Box extends HTMLElement {
         this.conflicts.push(element)
         this.updateConflicts()
     }
-    remConflicts(element){
+    removeConflicts(element){
         console.log(`${this.id}:`, this, "não conflita mais com", element)
         const c = this.conflicts
         this.conflicts = c.filter((item, index, array) => {
@@ -461,12 +455,20 @@ class Box extends HTMLElement {
             div.appendChild(this.functions.createConflict(element.id))
         })
     }
+    notifyAllConflicts({type}){
+        /* type = (destroy | updateID) */
+        if(type === "destroy"){
+            this.conflicts.forEach((element, index, array) => {
+                element.removeConflicting(this)
+            })
+        }
+    }
     addConflicting(element){
         console.log(`${this.id}:`, "Adicionando", element, "como conflitante")
         this.conflicting.push(element)
         console.log(`${this.id}:`, "conflicting", this.conflicting)
     }
-    remConflicting(element){
+    removeConflicting(element){
         console.log(`${this.id}:`, "Removendo", element, "como conflitante")
         const c = this.conflicting
         this.conflicting = c.filter((item, index, array) => {
@@ -474,12 +476,21 @@ class Box extends HTMLElement {
         })
         console.log(`${this.id}:`, "conflicting", this.conflicting)
     }
+    notifyAllConflicting({type}){
+        /* type = (destroy | updateID) */
+        if(type === "destroy"){
+            this.conflicting.forEach((element,index, array) => {
+                element.removeConflicts(this)
+            })
+        } else if(type === "updateID"){
+            this.conflicting.forEach((element,index, array) => {
+                element.updateConflicts()
+            })
+        }
+    }
 
     createStyle(type){
         var style = document.createElement("style")
-        const RF =  ".RF{\nborder-color: green;\n}"
-        const RNF = ".RNF{\nborder-color: orangered;\n}"
-        const RN =  ".RN{\nborder-color: indigo;\n}"
         const types = {
             RF:  "\n.RF{\nborder-color: green;\n}\n",
             RNF: "\n.RNF{\nborder-color: orangered;\n}\n",
@@ -504,7 +515,7 @@ fieldset#fieldsetDescricao > textarea#descricao
 }
 
 #fieldsetDescricao, #divNome, #divOrigem,
-#divResponsavel, #divInteressados, #divPriority
+#divResponsavel, #divInteressados, #divPrioridade
 {
     margin-inline-start: 2px;
     margin-inline-end: 2px;
@@ -514,7 +525,7 @@ fieldset#fieldsetDescricao > textarea#descricao
 
 #divNome > input, #divOrigem > input,
 #divResponsavel > input, #divInteressados > input,
-#divPriority > select
+#divPrioridade > select
 {
     flex-grow: 1;
     margin-left: 5px;
