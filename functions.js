@@ -1,3 +1,33 @@
+const testExportData = () => {
+    document.querySelector("#addRF").click()
+    document.querySelector("#addRF").click()
+    document.querySelector("#addRNF").click()
+    document.querySelector("#addRNF").click()
+    document.querySelector("#addRN").click()
+    document.querySelector("#addRN").click()
+
+
+    document.querySelector("#RF1").shadowRoot.querySelector("#nome").value = 'Nome do meu RF'
+    document.querySelector("#RF1").shadowRoot.querySelector("#descricao").value = 'Descrição do meu RF'
+    document.querySelector("#RF1").shadowRoot.querySelector("#origem").value = 'Origem do meu RF'
+    document.querySelector("#RF1").shadowRoot.querySelector("#responsavel").value = 'Responsável pelo meu RF'
+    document.querySelector("#RF1").shadowRoot.querySelector("#interessados").value = 'Interessado pelo meu RF'
+
+    document.querySelector("#RF1").shadowRoot.querySelector("#dependenciaINPUT").value = "RNF1"
+    document.querySelector("#RF1").shadowRoot.querySelector("#dependenciaINPUT").dispatchEvent(new KeyboardEvent('keydown',{'keyCode':13}));
+    document.querySelector("#RF1").shadowRoot.querySelector("#dependenciaINPUT").value = "RN1"
+    document.querySelector("#RF1").shadowRoot.querySelector("#dependenciaINPUT").dispatchEvent(new KeyboardEvent('keydown',{'keyCode':13}));
+
+    document.querySelector("#RF1").shadowRoot.querySelector("#conflitosINPUT").value = "RNF2"
+    document.querySelector("#RF1").shadowRoot.querySelector("#conflitosINPUT").dispatchEvent(new KeyboardEvent('keydown',{'keyCode':13}));
+    document.querySelector("#RF1").shadowRoot.querySelector("#conflitosINPUT").value = "RN2"
+    document.querySelector("#RF1").shadowRoot.querySelector("#conflitosINPUT").dispatchEvent(new KeyboardEvent('keydown',{'keyCode':13}));
+
+    document.querySelector("#export").onclick()
+
+    console.clear()
+}
+
 function updateBoxes(type, node){
     const tagNames = {
         "RF": "mr-rf",
@@ -39,13 +69,13 @@ function addRN() {
 const callConfig = () => alert("Configuração");
 const callExport = () => {
     infoExport.checked = true
-    compilaInfos()
+    document.querySelector(".infoExport > pre").textContent = compilaInfos({type: "text"})
 };
 
 function closeInfoExport(){
     infoExport.checked = false
 }
-function compilaInfos(){
+function compilaInfos({type}){
     const all = [
         ...document.querySelectorAll("mr-rf"),
         ...document.querySelectorAll("mr-rnf"),
@@ -54,53 +84,109 @@ function compilaInfos(){
 
     const infoAll = all.map(item => item.getInfos({type: "full"}))
 
-    const infoAllSepareted = {}
-    const regExpRF = /(RF[0-9]+)/g
-    const regExpRNF = /(RNF[0-9]+)/g
-    const regExpRN = /(RN[0-9]+)/g
+    const depAndCon = (anterior, item, index, array) =>  anterior + item + (index < array.length-1 ? ", " : "")
 
-    infoAllSepareted.RF = infoAll.filter(item => item.id.match(regExpRF))
-    infoAllSepareted.RNF = infoAll.filter(item => item.id.match(regExpRNF))
-    infoAllSepareted.RN = infoAll.filter(item => item.id.match(regExpRN))
-
-    const formatExport = (stringFinal, currentItem, index, array) => {
-        const depAndCon = (anterior, item, index, array) =>  anterior + item + (index < array.length-1 ? ", " : "")
-            
-        var tmp = `id: ${currentItem.id}\n`
-        tmp += `nome: ${currentItem.nome}\n`
-        tmp += `descrição: ${currentItem["descrição"]}\n`
-        tmp += `origem: ${currentItem.origem}\n`
-        tmp += `responsável: ${currentItem["responsável"]}\n`
-        tmp += `interessados: ${currentItem.interessados}\n`
-        tmp += `prioridade: ${currentItem.prioridade}\n`
-        tmp += currentItem["dependências"].reduce(depAndCon, "dependências: ")
-        tmp += "\n"
-        tmp += currentItem["conflitos"].reduce(depAndCon, "conflitos: ")
-        tmp += index < array.length-1 ? "\n- - - - - - - - - - - - - \n" : "\n\n"
-        return stringFinal += tmp
-    }
-
-    const exportedRF = infoAllSepareted.RF.reduce(formatExport, "============RF============\n\n")
-    const exportedRNF = infoAllSepareted.RNF.reduce(formatExport, "============RNF===========\n\n")
-    const exportedRN = infoAllSepareted.RN.reduce(formatExport, "============RN============\n\n")
+    if(type === "text"){
+        const infoAllSepareted = {}
+        const regExpRF = /(RF[0-9]+)/g
+        const regExpRNF = /(RNF[0-9]+)/g
+        const regExpRN = /(RN[0-9]+)/g
     
-    document.querySelector(".infoExport > pre").textContent = exportedRF+exportedRNF+exportedRN
+        infoAllSepareted.RF = infoAll.filter(item => item.id.match(regExpRF))
+        infoAllSepareted.RNF = infoAll.filter(item => item.id.match(regExpRNF))
+        infoAllSepareted.RN = infoAll.filter(item => item.id.match(regExpRN))
+    
+        const formatExportText = (stringFinal, currentItem, index, array) => {
+            // const depAndCon = (anterior, item, index, array) =>  anterior + item + (index < array.length-1 ? ", " : "")
+                
+            var tmp = `id: ${currentItem.id}\n`
+            tmp += `nome: ${currentItem.nome}\n`
+            tmp += `descrição: ${currentItem["descrição"]}\n`
+            tmp += `origem: ${currentItem.origem}\n`
+            tmp += `responsável: ${currentItem["responsável"]}\n`
+            tmp += `interessados: ${currentItem.interessados}\n`
+            tmp += `prioridade: ${currentItem.prioridade}\n`
+            tmp += currentItem["dependências"].reduce(depAndCon, "dependências: ")
+            tmp += "\n"
+            tmp += currentItem["conflitos"].reduce(depAndCon, "conflitos: ")
+            tmp += index < array.length-1 ? "\n- - - - - - - - - - - - - \n" : "\n\n"
+            return stringFinal += tmp
+        }
+    
+        const exportedRF = infoAllSepareted.RF.reduce(formatExportText, "============RF============\n\n")
+        const exportedRNF = infoAllSepareted.RNF.reduce(formatExportText, "============RNF===========\n\n")
+        const exportedRN = infoAllSepareted.RN.reduce(formatExportText, "============RN============\n\n")
+        return exportedRF+exportedRNF+exportedRN
+    }else if(type === "table"){
+        return infoAll.reduce((stringFinal, currentItem) => {
+            const openTable = (id) => `<table id="${id}">\n`
+            const closeTable = () => `</table>\n`
+
+            const openTr = (id) => `\t<tr id="${id}">\n`
+            const closeTr = () => `\t</tr>\n`
+
+            const thTd = (label, data) => `\t\t<th>${label}:</th>\n\t\t<td>${data}</td>\n`
+            const thTdClass = (label, data) => `\t\t<th class="itemBrightness">${label}:</th>\n\t\t<td class="itemBrightness">${data}</td>\n`
+
+            const id = (_id) => thTd("id", _id)
+            const nome = (nome) => thTdClass("nome", nome)
+            const descricao = (descricao) => thTd("descrição", descricao)
+            const origem = (origem) => thTdClass("origem", origem)
+            const responsavel = (responsavel) => thTd("responsável", responsavel)
+            const interessados = (interessados) => thTdClass("interessados", interessados)
+            const prioridade = (prioridade) => thTd("prioridade", prioridade)
+            const dependencias = (dependencias) => thTdClass("dependências:", dependencias)
+            const conflitos = (conflitos) => thTd("conflitos", conflitos.reduce(depAndCon, ""))
+
+            var tmp = openTable(currentItem.id)
+            tmp += openTr("id") + id(currentItem.id) + closeTr()
+            tmp += openTr("nome") + nome(currentItem.nome) + closeTr()
+            tmp += openTr("descricao") + descricao(currentItem["descrição"]) + closeTr()
+            tmp += openTr("origem") + origem(currentItem.origem) + closeTr()
+            tmp += openTr("responsavel") + responsavel(currentItem["responsável"]) + closeTr()
+            tmp += openTr("interessados") + interessados(currentItem.interessados) + closeTr()
+            tmp += openTr("prioridade") + prioridade(currentItem.prioridade) + closeTr()
+            tmp += openTr("dependencias") + dependencias(currentItem["dependências"]) + closeTr()
+            tmp += openTr("conflitos") + conflitos(currentItem.conflitos) + closeTr()
+            tmp += closeTable()
+
+            return stringFinal += tmp
+        }, "")
+    }
 }
-async function copyToClipboard(event){
-    const txtExportCompiled = document.querySelector(".infoExport > pre").textContent
-    await navigator.clipboard.writeText(txtExportCompiled)
-    event.target.classList.toggle("clicado")
-    event.target.textContent = "Copiado..."
+async function copyToClipboard({ target }){
+    if(target.id === "text"){
+        const txtExportCompiled = document.querySelector(".infoExport > pre").textContent
+        await navigator.clipboard.writeText(txtExportCompiled)
+    }else if(target.id == "word"){
+        // var aux = document.createElement("div");
+        var aux = document.getElementById("tables");
+        aux.setAttribute("contentEditable", true);
+        aux.innerHTML = compilaInfos({type: "table"});
+        aux.setAttribute("onfocus", "document.execCommand('selectAll',false,null)");
+        // document.body.appendChild(aux);
+        aux.focus();
+        document.execCommand("copy");
+        // document.body.removeChild(aux);
+        aux.setAttribute("contentEditable", false);
+        aux.innerHTML = ""
+        aux.removeAttribute("onfocus")
+        // console.log(compilaInfos({type: "table"}))
+    }
+    const lastText = target.textContent
+    target.classList.toggle("clicado")
+    target.textContent = "Copiado..."
     setTimeout(() => {
-        event.target.classList.toggle("clicado")
-        event.target.textContent = "Copiar"
+        target.classList.toggle("clicado")
+        target.textContent = lastText
     }, 1500)
 }
 
 (() => {
     const divInfoExport = document.querySelector(".infoExport")
     const btnFechar = document.querySelector(".infoExport > button#fechar")
-    const btnCopiar = document.querySelector(".infoExport > button#copiar")
+    const btnCopiarText = document.querySelector(".infoExport > #fieldCopy > button#text")
+    const btnCopiarWord = document.querySelector(".infoExport > #fieldCopy > button#word")
     const iconExport = document.querySelector("#export")
     const iconConfig = document.querySelector("#gear")
 
@@ -117,7 +203,8 @@ async function copyToClipboard(event){
         if(event.target === divInfoExport) closeInfoExport()
     }
     btnFechar.onclick = (event) => closeInfoExport()
-    btnCopiar.onclick = (event) => copyToClipboard(event)
+    btnCopiarText.onclick = (event) => copyToClipboard(event)
+    btnCopiarWord.onclick = (event) => copyToClipboard(event)
     
     iconExport.onclick = (event) => callExport()
     iconConfig.onclick = (event) => callConfig()

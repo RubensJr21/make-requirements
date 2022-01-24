@@ -102,7 +102,6 @@ input[id=viewDC] {
 /* START EXPORT (Requisitos) */
 .infoExport{
     background: rgb(0, 255, 255, .5);
-    /* padding: 2em; */
     position: fixed;
     width: 100vw;
     height: 100vh;
@@ -139,16 +138,23 @@ input[id=viewDC] {
     margin-right: 10px;
 }
 
-.infoExport > button[id="copiar"]{
+.infoExport > #fieldCopy {
+    display: flex;
+    justify-content: space-around;
+    width: 190px;
+}
+.infoExport > #fieldCopy > button#text,
+.infoExport > #fieldCopy > button#word{
     font-size: .9em;
-    display: block;
-    width: 15vw;
+    /* display: block; */
+    width: 80px;
     border-width: 3px;
     border-color: darkcyan;
     box-shadow: 2px 2px 5px rgb(0 0 0 / 60%);
     border-radius: 5px;
 }
-.infoExport > button#copiar.clicado{
+.infoExport > #fieldCopy > button#text.clicado,
+.infoExport > #fieldCopy > button#word.clicado{
     background-color: #1c1c1f;
     border-color: black;
     border-width: 3px;
@@ -181,3 +187,34 @@ input[id=infoExport] {
     display:none;
 }
 /* END EXPORT (Requisitos) */
+
+
+/* TABLES EXPORT */
+
+#tables{
+    display: flex;
+    flex-direction: column;
+}
+#tables > table{
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    width: 100vw;
+    border-spacing: 0px;
+}
+.itemBrightness{
+    background-color: gray;
+}
+tr#descricao > td, tr#dependencias > td, tr#conflitos > td{
+    height: 7vh;
+}
+
+th, td {
+    vertical-align: baseline;
+    background-color: white;
+    border: 1px solid black;
+    text-align: left;
+}
+th {
+    width: 15vw;
+}
